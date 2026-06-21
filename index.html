@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -8,10 +7,21 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #022c22; }
-        ::-webkit-scrollbar-thumb { background: #059669; border-radius: 10px; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+        }
+        /* Custom scrollbar untuk kenyamanan scroll di HP */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #022c22; /* Emerald 950 */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #059669; /* Emerald 600 */
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center p-3 sm:p-6 pb-20">
@@ -22,16 +32,26 @@
             <div id="logoContainer" class="relative w-24 h-24 mb-4 bg-white p-1 rounded-full shadow-lg border-2 border-emerald-500 overflow-hidden flex items-center justify-center">
                 <img id="logoPesantren" src="1000302681.png" alt="Logo Al-Mu'awanah" class="object-contain w-full h-full" onerror="handleLogoError()">
             </div>
-            <span class="bg-emerald-950/60 text-emerald-400 text-[10px] font-bold tracking-widest uppercase px-3.5 py-1 rounded-full border border-emerald-800/30">PONDOK PESANTREN</span>
-            <h1 class="text-lg sm:text-xl font-black tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 mt-2">AL-MU'AWANAH</h1>
+            <span class="bg-emerald-950/60 text-emerald-400 text-[10px] font-bold tracking-widest uppercase px-3.5 py-1 rounded-full border border-emerald-800/30">
+                PONDOK PESANTREN
+            </span>
+            <h1 class="text-lg sm:text-xl font-black tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 mt-2">
+                AL-MU'AWANAH
+            </h1>
             <p class="text-xs text-emerald-400 font-bold tracking-wider">SUKAMANDI</p>
             <p class="text-[10px] text-slate-400 mt-1">Sistem Absensi, Keterlambatan & Denda Santri</p>
         </div>
 
         <div class="grid grid-cols-3 gap-1 bg-slate-950 p-1.5 rounded-2xl mb-6 border border-emerald-950/40">
-            <button onclick="switchTab('piket')" id="tab-piket" class="text-xs font-bold py-2.5 rounded-xl transition-all duration-200 bg-emerald-600 text-white shadow-lg shadow-emerald-950/50 cursor-pointer">Piket</button>
-            <button onclick="switchTab('isya')" id="tab-isya" class="text-xs font-bold py-2.5 rounded-xl transition-all duration-200 text-slate-400 hover:text-emerald-300 cursor-pointer">Isya' (Semua)</button>
-            <button onclick="switchTab('rekap')" id="tab-rekap" class="text-xs font-bold py-2.5 rounded-xl transition-all duration-200 text-slate-400 hover:text-emerald-300 cursor-pointer">Rekap</button>
+            <button onclick="switchTab('piket')" id="tab-piket" class="text-xs font-bold py-2.5 rounded-xl transition-all duration-200 bg-emerald-600 text-white shadow-lg shadow-emerald-950/50 cursor-pointer">
+                Piket
+            </button>
+            <button onclick="switchTab('isya')" id="tab-isya" class="text-xs font-bold py-2.5 rounded-xl transition-all duration-200 text-slate-400 hover:text-emerald-300 cursor-pointer">
+                Isya' (Semua)
+            </button>
+            <button onclick="switchTab('rekap')" id="tab-rekap" class="text-xs font-bold py-2.5 rounded-xl transition-all duration-200 text-slate-400 hover:text-emerald-300 cursor-pointer">
+                Rekap
+            </button>
         </div>
 
         <div class="bg-slate-950/40 border border-emerald-950/30 rounded-2xl p-3.5 mb-5 space-y-2 text-[11px] text-slate-400">
@@ -47,61 +67,19 @@
                 <span class="text-red-400 font-bold">⚠️</span>
                 <div>
                     <span class="font-semibold text-slate-300">Ketentuan Pengajian Ba'da Isya (Semua):</span><br>
-                    • Alpa/Terlambat harian: <span class="text-emerald-400 font-semibold">Denda Rp0</span><br>
-                    • Kelipatan <span class="text-red-400 font-bold">5 Kali Pelanggaran</span>, wajib memilih sanksi: <span class="text-yellow-400 font-semibold">Denda Rp5.000</span> ATAU <span class="text-yellow-450 font-semibold">Hukum Botak 👩‍🦲</span>.
+                    • Alpa/Terlambat harian: <span class="text-emerald-400 font-semibold">Denda Rp0</span> (Hanya dicatat)<br>
+                    • Kelipatan <span class="text-red-400 font-bold">5 Kali Pelanggaran</span> (Alpa/Terlambat), wajib memilih sanksi: <span class="text-yellow-400 font-semibold">Denda Rp5.000</span> ATAU <span class="text-yellow-450 font-semibold">Hukum Botak 👩‍🦲</span>.
                 </div>
             </div>
         </div>
 
         <div id="panel-piket" class="space-y-5">
-            <select id="daySelect" onchange="renderApp()" class="w-full bg-slate-950 border border-emerald-950/60 rounded-2xl p-3.5 text-sm text-slate-200">
-                <option value="Sabtu">Sabtu</option><option value="Minggu">Minggu</option><option value="Senin">Senin</option><option value="Selasa" selected>Selasa</option><option value="Rabu">Rabu</option><option value="Kamis">Kamis</option>
-            </select>
-            <div id="piketListContainer" class="space-y-4"></div>
-        </div>
-
-        <div id="panel-isya" class="hidden space-y-4">
-            <input type="text" id="searchInput" oninput="renderApp()" placeholder="Cari nama santri..." class="w-full bg-slate-950 border border-emerald-950/60 rounded-2xl p-3 text-sm text-slate-200">
-            <div id="isyaListContainer" class="space-y-4 max-h-[400px] overflow-y-auto"></div>
-        </div>
-
-        <div id="panel-rekap" class="hidden space-y-4">
-            <div id="summaryContainer" class="space-y-3"></div>
-            <button onclick="showResetModal()" class="w-full mt-4 text-[10px] text-red-400 py-2 border border-dashed border-red-950/45 rounded-xl cursor-pointer">⚠️ Reset Semua Data Aplikasi</button>
-        </div>
-    </div>
-
-    <script>
-        const jadwal = { "Sabtu": ["Sabil", "Fatir", "Hafid"], "Minggu": ["Ale", "Noval", "Alif"], "Senin": ["Ihab", "Aswad", "Adit"], "Selasa": ["Rehan", "Tohir"], "Rabu": ["Maman", "Samsul"], "Kamis": ["Ikrom", "Trisno", "Aris"] };
-        const listSemuaSantri = [...Object.values(jadwal).flat(), "Bagio", "Syarif"].sort();
-        const AMBANG_BATAS = 5; // <-- Diubah menjadi 5
-
-        let db = JSON.parse(localStorage.getItem('denda_app')) || {};
-        listSemuaSantri.forEach(n => { if (!db[n]) db[n] = { ja: 0, so: 0, di: 0, ap: 0, tp: 0, sd: 0, bt: 0 }; });
-
-        function dapatkanStatusSanksiIsya(n) {
-            const totalPelanggaranIsya = (db[n].ap || 0) + (db[n].tp || 0);
-            const totalSanksiHarus = Math.floor(totalPelanggaranIsya / AMBANG_BATAS);
-            const sanksiDendaDiselesaikan = Math.floor((db[n].sd || 0) / 5000);
-            const sanksiBotakDiselesaikan = db[n].bt || 0;
-            const totalSanksiSelesai = sanksiDendaDiselesaikan + sanksiBotakDiselesaikan;
-            return { totalPelanggaran: totalPelanggaranIsya, sanksiTersisa: Math.max(0, totalSanksiHarus - totalSanksiSelesai) };
-        }
-
-        // --- Fungsi lainnya tetap identik dengan kode lama Anda ---
-        function save() { localStorage.setItem('denda_app', JSON.stringify(db)); }
-        function renderApp() { /* (Fungsi lengkap render tetap sama) */ }
-        function updatePiket(n, p, v) { db[n][p] = Math.max(0, db[n][p] + v); save(); renderApp(); }
-        function updateIsya(n, p, v) { db[n][p] = Math.max(0, db[n][p] + v); save(); renderApp(); }
-        function eksekusiSanksi(n, t) { if(t==='denda') db[n].sd += 5000; else db[n].bt += 1; save(); renderApp(); }
-        function bayarDenda(n) { /* (Fungsi lengkap tetap sama) */ }
-        function switchTab(t) { /* (Fungsi lengkap tetap sama) */ }
-        function showResetModal() { document.getElementById('confirmModal').classList.remove('pointer-events-none'); }
-        function executeReset() { localStorage.removeItem('denda_app'); location.reload(); }
-        
-        renderApp();
-    </script>
-</body>
-</html>
-
-```
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📅 Pilih Hari Roster:</label>
+                <div class="relative">
+                    <select id="daySelect" onchange="renderApp()" class="w-full bg-slate-950 border border-emerald-950/60 rounded-2xl p-3.5 text-sm text-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 appearance-none cursor-pointer">
+                        <option value="Sabtu">Sabtu (Sabil, Fatir, Hafid)</option>
+                        <option value="Minggu">Minggu (Ale, Noval, Alif)</option>
+                        <option value="Senin">Senin (Ihab, Aswad, Adit)</option>
+                        <option value="Selasa" selected>Selasa (Rehan, Tohir)</option>
+                        <option value="
