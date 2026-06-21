@@ -73,7 +73,7 @@
                 <div>
                     <span class="font-semibold text-slate-300">Ketentuan Pengajian Ba'da Isya (Semua):</span><br>
                     • Alpa/Terlambat harian: <span class="text-emerald-400 font-semibold">Denda Rp0</span> (Hanya dicatat)<br>
-                    • Kelipatan <span class="text-red-400 font-bold">3 Kali Pelanggaran</span> (Alpa/Terlambat), wajib memilih sanksi: <span class="text-yellow-400 font-semibold">Denda Rp5.000</span> ATAU <span class="text-yellow-450 font-semibold">Hukum Botak 👩‍🦲</span>.
+                    • Kelipatan <span class="text-red-400 font-bold">5 Kali Pelanggaran</span> (Alpa/Terlambat), wajib memilih sanksi: <span class="text-yellow-400 font-semibold">Denda Rp5.000</span> ATAU <span class="text-yellow-450 font-semibold">Hukum Botak 👩‍🦲</span>.
                 </div>
             </div>
         </div>
@@ -203,7 +203,7 @@
         // Konfigurasi Tarif Denda Resmi
         const TARIF = {
             piket: 3000,      // Denda Sholat Ashar & Sorogan harian
-            sanksiDenda: 5000 // Denda pilihan sanksi kelipatan 3
+            sanksiDenda: 5000 // Denda pilihan sanksi kelipatan 5
         };
 
         // Penanganan Logo Error
@@ -268,10 +268,10 @@
             return hitungTotalDendaSantri(n) - db[n].di;
         }
 
-        // Hitung total pelanggaran Isya (Alpa + Terlambat) dan sisa sanksi kelipatan 3
+        // Hitung total pelanggaran Isya (Alpa + Terlambat) dan sisa sanksi kelipatan 5
         function dapatkanStatusSanksiIsya(n) {
             const totalPelanggaranIsya = db[n].ap + db[n].tp;
-            const totalSanksiHarus = Math.floor(totalPelanggaranIsya / 3);
+            const totalSanksiHarus = Math.floor(totalPelanggaranIsya / 5);
             
             // 1 sanksi denda bernilai TARIF.sanksiDenda (Rp5.000)
             const sanksiDendaDiselesaikan = Math.floor((db[n].sd || 0) / TARIF.sanksiDenda);
@@ -540,7 +540,7 @@ Berikut kami sampaikan rincian laporan kedisiplinan dan administrasi denda anand
 *2. Pelanggaran Pengajian Isya':*
 - Alpa (Tidak Hadir): ${db[n].ap || 0} kali
 - Terlambat: ${db[n].tp || 0} kali
-_Catatan: Setiap kelipatan 3 kali pelanggaran Isya dikenakan sanksi denda Rp5.000 atau hukuman dicukur botak._
+_Catatan: Setiap kelipatan 5 kali pelanggaran Isya dikenakan sanksi denda Rp5.000 atau hukuman dicukur botak._
 
 *3. Sanksi Tambahan Isya:*
 - Pilihan Sanksi Denda: Rp${(db[n].sd || 0).toLocaleString('id-ID')}
@@ -558,7 +558,7 @@ Laporan ini dikirimkan untuk menjaga kedisiplinan, ketertiban, serta kerja sama 
 Atas perhatian dan kerjasamanya, kami ucapkan terima kasih.
 _Wassalamu'alaikum Wr. Wb._
 
-*Pengurus Pondok Pesantren Al-Mu'awanah*`;
+*H. Tb. A. Mubarok*`;
 
             const teksUrl = encodeURIComponent(teksLaporan);
             window.open(`https://api.whatsapp.com/send?text=${teksUrl}`, '_blank');
