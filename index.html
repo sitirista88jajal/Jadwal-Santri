@@ -179,7 +179,7 @@
             </div>
 
             <div class="bg-emerald-950/20 border border-emerald-900/30 rounded-xl p-3 text-[10px] text-emerald-300">
-                🛡️ <strong>Catatan:</strong> Mengeluarkan santri TIDAK menghapus data absen, denda, dan sanksi yang sudah tercatat. Semua riwayat tetap tersimpan.
+                🛡️ <strong>Catatan:</strong> Mengeluarkan santri TIDAK menghapus data absen, denda, dan sanksi yang sudah tercatat. Semua riwayat tetap tersimpan di sistem.
             </div>
         </div>
     </div>
@@ -633,4 +633,7 @@
                 const status = dapatkanStatusSanksiIsya(n);
                 const isTambahan = santriTambahan.includes(n);
 
-                if (totalDenda > 0 || db
+                summaryCont.innerHTML += `
+                    <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-700/40">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-slate-200 text-sm">${n} ${isTambahan?'<span class="text-[8px] bg-emerald-950 text-emerald-300 px-1.5 py-0.2 rounded ml-1">Non-piket</span>
