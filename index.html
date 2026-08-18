@@ -3,66 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Monitoring Santri - Al-Mu'awanah Sukamandi</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Sistem Monitoring & Absensi Santri - Al-Mu'awanah Sukamandi</title>
+    <!-- Tailwind CSS v4 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #022c22; }
-        ::-webkit-scrollbar-thumb { background: #059669; border-radius: 10px; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #022c22;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #059669;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center p-3 sm:p-6 pb-20">
 
-    <div class="w-full max-w-md bg-slate-900 rounded-3xl shadow-2xl border border-emerald-950/50 p-5 sm:p-6 mb-6">
+    <!-- Container Utama -->
+    <div class="w-full max-w-md bg-slate-900 rounded-3xl shadow-2xl border border-emerald-950/50 p-5 sm:p-6 mb-6 relative">
         
-        <!-- Header -->
+        <!-- Header Pesantren & Logo -->
         <div class="text-center mb-6 flex flex-col items-center">
-            <div class="relative w-24 h-24 mb-4 bg-white p-1 rounded-full shadow-lg border-2 border-emerald-500 overflow-hidden flex items-center justify-center">
-                <span class="text-3xl">🕌</span>
+            <button onclick="openKelolaSantriModal()" class="absolute top-4 right-4 bg-emerald-950 hover:bg-emerald-900 text-emerald-400 text-[10px] font-bold px-3 py-1.5 rounded-xl border border-emerald-800/40 flex items-center gap-1 transition cursor-pointer">
+                ⚙️ Kelola Santri
+            </button>
+            <div id="logoContainer" class="relative w-24 h-24 mb-4 bg-white p-1 rounded-full shadow-lg border-2 border-emerald-500 overflow-hidden flex items-center justify-center">
+                <img id="logoPesantren" src="1000302681.png" alt="Logo Al-Mu'awanah" class="object-contain w-full h-full" onerror="handleLogoError()">
             </div>
-            <span class="bg-emerald-950/60 text-emerald-400 text-[10px] font-bold tracking-widest uppercase px-3.5 py-1 rounded-full">PONDOK PESANTREN</span>
-            <h1 class="text-lg sm:text-xl font-black tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 mt-2">AL-MU'AWANAH</h1>
+            <span class="bg-emerald-950/60 text-emerald-400 text-[10px] font-bold tracking-widest uppercase px-3.5 py-1 rounded-full border border-emerald-800/30">
+                PONDOK PESANTREN
+            </span>
+            <h1 class="text-lg sm:text-xl font-black tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 mt-2">
+                AL-MU'AWANAH
+            </h1>
             <p class="text-xs text-emerald-400 font-bold tracking-wider">SUKAMANDI</p>
             <p class="text-[10px] text-slate-400 mt-1">Sistem Absensi, Keterlambatan & Denda Santri</p>
         </div>
 
-        <!-- Navigation Tabs -->
-        <div class="grid grid-cols-5 gap-1 bg-slate-950 p-1.5 rounded-2xl mb-6 border border-emerald-950/40">
-            <button onclick="switchTab('piket')" id="tab-piket" class="text-[10px] font-bold py-2.5 rounded-xl transition-all bg-emerald-600 text-white shadow-lg">Piket</button>
-            <button onclick="switchTab('isya')" id="tab-isya" class="text-[10px] font-bold py-2.5 rounded-xl transition-all text-slate-400 hover:text-emerald-300">Isya</button>
-            <button onclick="switchTab('denda')" id="tab-denda" class="text-[10px] font-bold py-2.5 rounded-xl transition-all text-slate-400 hover:text-emerald-300">⚠️ Denda</button>
-            <button onclick="switchTab('rekap')" id="tab-rekap" class="text-[10px] font-bold py-2.5 rounded-xl transition-all text-slate-400 hover:text-emerald-300">Rekap</button>
-            <button onclick="switchTab('pengaturan')" id="tab-pengaturan" class="text-[10px] font-bold py-2.5 rounded-xl transition-all text-slate-400 hover:text-emerald-300">⚙️</button>
+        <!-- Navigation Tabs (4 Menu Utama) -->
+        <div class="grid grid-cols-4 gap-1 bg-slate-950 p-1.5 rounded-2xl mb-6 border border-emerald-950/40">
+            <button onclick="switchTab('piket')" id="tab-piket" class="text-[11px] font-bold py-2.5 rounded-xl transition-all duration-200 bg-emerald-600 text-white shadow-lg shadow-emerald-950/50 cursor-pointer text-center">
+                Piket
+            </button>
+            <button onclick="switchTab('isya')" id="tab-isya" class="text-[11px] font-bold py-2.5 rounded-xl transition-all duration-200 text-slate-400 hover:text-emerald-300 cursor-pointer text-center">
+                Isya'
+            </button>
+            <button onclick="switchTab('denda')" id="tab-denda" class="text-[11px] font-bold py-2.5 rounded-xl transition-all duration-200 text-slate-400 hover:text-emerald-300 cursor-pointer text-center relative">
+                Denda
+                <span id="badgeDendaAktif" class="hidden absolute -top-1 -right-1 bg-rose-600 text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-slate-900">0</span>
+            </button>
+            <button onclick="switchTab('rekap')" id="tab-rekap" class="text-[11px] font-bold py-2.5 rounded-xl transition-all duration-200 text-slate-400 hover:text-emerald-300 cursor-pointer text-center">
+                Rekap
+            </button>
         </div>
 
-        <!-- Info Ketentuan -->
+        <!-- INFO KETENTUAN RESMI -->
         <div class="bg-slate-950/40 border border-emerald-950/30 rounded-2xl p-3.5 mb-5 space-y-2 text-[11px] text-slate-400">
             <div class="flex items-start gap-2.5">
                 <span class="text-emerald-400 font-bold">🕌</span>
                 <div>
-                    <span class="font-semibold text-slate-300">Ketentuan Piket Ashar:</span><br>
-                    • Tidak Sholat Ashar Berjama'ah: <span class="text-rose-400 font-bold">Rp3.000</span><br>
-                    • Tidak Sorogan Setelah Ashar: <span class="text-rose-400 font-bold">Rp3.000</span>
+                    <span class="font-semibold text-slate-300">Ketentuan Roster Piket (Ashar):</span><br>
+                    • Tidak Sholat / Tidak Sorogan: <span class="text-rose-400 font-bold">Rp3.000 / pelanggaran</span>
                 </div>
             </div>
             <div class="flex items-start gap-2.5 border-t border-emerald-950/30 pt-2">
-                <span class="text-amber-400 font-bold">⚠️</span>
+                <span class="text-red-400 font-bold">⚠️</span>
                 <div>
-                    <span class="font-semibold text-slate-300">Ketentuan Pengajian Ba'da Isya:</span><br>
-                    • Alpa/Terlambat harian: dicatat saja<br>
-                    • Kelipatan <span class="text-red-400 font-bold">5 Kali</span> → PILIH: <span class="text-yellow-400 font-semibold">Denda Rp5.000</span> <strong>ATAU</strong> <span class="text-yellow-400 font-semibold">Botak 👩‍🦲</span> — pilih salah satu!
+                    <span class="font-semibold text-slate-300">Ba'da Isya (Kelipatan 5 Pelanggaran):</span><br>
+                    • Wajib memilih sanksi: <span class="text-yellow-400 font-semibold">Denda Rp5.000</span> ATAU <span class="text-yellow-400 font-semibold">Hukum Botak 👩‍🦲</span>.
                 </div>
             </div>
         </div>
 
-        <!-- TAB 1: PIKET -->
+        <!-- TAB 1: PIKET HARIAN -->
         <div id="panel-piket" class="space-y-5">
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📅 Pilih Hari Roster:</label>
                 <div class="relative">
-                    <select id="daySelect" onchange="renderApp()" class="w-full bg-slate-950 border border-emerald-950/60 rounded-2xl p-3.5 text-sm text-slate-200 appearance-none cursor-pointer">
+                    <select id="daySelect" onchange="renderApp()" class="w-full bg-slate-950 border border-emerald-950/60 rounded-2xl p-3.5 text-sm text-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 appearance-none cursor-pointer">
                         <option value="Sabtu">Sabtu</option>
                         <option value="Minggu">Minggu</option>
                         <option value="Senin">Senin</option>
@@ -70,61 +95,62 @@
                         <option value="Rabu">Rabu</option>
                         <option value="Kamis">Kamis</option>
                     </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-emerald-500">▼</div>
                 </div>
             </div>
+
+            <div class="border-t border-emerald-950/50 my-4"></div>
             <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Daftar Santri Piket Hari Ini</h3>
             <div id="piketListContainer" class="space-y-4"></div>
         </div>
 
-        <!-- TAB 2: ISYA -->
+        <!-- TAB 2: PENGAJIAN BA'DA ISYA -->
         <div id="panel-isya" class="hidden space-y-4">
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔍 Cari Nama Santri:</label>
-                <input type="text" id="searchInput" oninput="renderApp()" placeholder="Ketik nama santri..." class="w-full bg-slate-950 border border-emerald-950/60 rounded-2xl p-3 text-sm text-slate-200">
+                <input type="text" id="searchInput" oninput="renderApp()" placeholder="Ketik nama santri..." class="w-full bg-slate-950 border border-emerald-950/60 rounded-2xl p-3 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500">
             </div>
+
             <div class="flex justify-between items-center px-1">
                 <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Kehadiran Pengajian Ba'da Isya</span>
-                <span class="text-[10px] bg-emerald-950 text-emerald-300 px-2.5 py-0.5 rounded-full" id="totalSantriBadge">0 Santri</span>
+                <span class="text-[10px] bg-emerald-950 text-emerald-300 px-2.5 py-0.5 rounded-full font-medium" id="totalSantriBadge">0 Santri</span>
             </div>
+
             <div id="isyaListContainer" class="space-y-4 max-h-[400px] overflow-y-auto pr-1"></div>
         </div>
 
-        <!-- TAB 3: DENDA -->
-        <div id="panel-denda" class="hidden space-y-5">
+        <!-- TAB 3: MENU DENDA BERJALAN (BARU) -->
+        <div id="panel-denda" class="hidden space-y-4">
             <div class="flex justify-between items-center">
-                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">⚠️ Denda & Sanksi Sedang Berjalan</h2>
-                <span class="text-[10px] bg-rose-950 text-rose-300 px-2 py-0.5 rounded-md">Live</span>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Denda & Sanksi Berjalan</h2>
+                <span class="text-[10px] bg-rose-950/80 text-rose-300 px-2.5 py-0.5 rounded-full border border-rose-900/40 font-bold" id="totalDendaBerjalanBadge">0 Aktif</span>
             </div>
-            <div class="bg-slate-950/60 border border-rose-950/40 rounded-2xl p-4 space-y-3">
-                <h3 class="text-xs font-bold text-rose-400 uppercase tracking-wider">💰 Denda Uang (Belum Lunas)</h3>
-                <div id="dendaUangContainer" class="space-y-2.5 max-h-[300px] overflow-y-auto pr-1"></div>
+
+            <!-- Sub-Filter Denda -->
+            <div class="grid grid-cols-2 gap-2 bg-slate-950 p-1 rounded-xl border border-emerald-950/40 text-xs font-bold">
+                <button onclick="switchSubDenda('uang')" id="subtab-uang" class="py-2 rounded-lg bg-emerald-600 text-white cursor-pointer">💵 Denda Uang</button>
+                <button onclick="switchSubDenda('botak')" id="subtab-botak" class="py-2 rounded-lg text-slate-400 hover:text-white cursor-pointer">👩‍🦲 Sanksi Botak</button>
             </div>
-            <div class="bg-slate-950/60 border border-amber-950/40 rounded-2xl p-4 space-y-3">
-                <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">⚖️ Sanksi Isya — Pilih Salah Satu!</h3>
-                <div id="sanksiIsyaContainer" class="space-y-2.5 max-h-[250px] overflow-y-auto pr-1"></div>
-            </div>
-            <div class="bg-slate-950 p-4 rounded-2xl border border-emerald-950/60 mt-2 space-y-2.5">
-                <h4 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Ringkasan</h4>
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-slate-900/50 p-2.5 rounded-xl border border-rose-950/30">
-                        <span class="block text-[9px] text-slate-400">Total Tagihan</span>
-                        <span id="statDendaTotal" class="text-sm font-bold text-rose-400">Rp0</span>
-                    </div>
-                    <div class="bg-slate-900/50 p-2.5 rounded-xl border border-emerald-950/30">
-                        <span class="block text-[9px] text-slate-400">Sisa Belum Bayar</span>
-                        <span id="statDendaSisa" class="text-sm font-bold text-amber-400">Rp0</span>
-                    </div>
-                </div>
-            </div>
+
+            <!-- List Denda Uang -->
+            <div id="panel-denda-uang" class="space-y-3 max-h-[380px] overflow-y-auto pr-1"></div>
+
+            <!-- List Sanksi Botak -->
+            <div id="panel-denda-botak" class="hidden space-y-3 max-h-[380px] overflow-y-auto pr-1"></div>
         </div>
 
-        <!-- TAB 4: REKAP -->
+        <!-- TAB 4: REKAPITULASI & LAPORAN -->
         <div id="panel-rekap" class="hidden space-y-4">
             <div class="flex justify-between items-center">
-                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Rincian & Pembayaran</h2>
-                <span class="text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded-md">Live Update</span>
+                <div class="flex flex-col">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Rincian & Pembayaran</h2>
+                    <span class="text-[9px] text-slate-500 font-medium">*Laporan resmi kedisiplinan dan administrasi</span>
+                </div>
+                <span class="text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded-md font-semibold border border-emerald-900/30 shrink-0">Live Update</span>
             </div>
+            
             <div id="summaryContainer" class="space-y-3 max-h-[350px] overflow-y-auto pr-1"></div>
+
             <div class="bg-slate-950 p-4 rounded-2xl border border-emerald-950/60 mt-4 space-y-2.5">
                 <h4 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Statistik Akumulasi</h4>
                 <div class="grid grid-cols-2 gap-3">
@@ -138,61 +164,70 @@
                     </div>
                 </div>
             </div>
+
+            <button onclick="showResetModal()" class="w-full mt-4 text-[10px] text-red-400/80 hover:text-red-400 hover:underline py-2 border border-dashed border-red-950/45 hover:border-red-900/60 rounded-xl cursor-pointer">
+                ⚠️ Reset Semua Data Aplikasi
+            </button>
         </div>
 
-        <!-- TAB 5: PENGATURAN SANTRI -->
-        <div id="panel-pengaturan" class="hidden space-y-5">
-            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">⚙️ Pengaturan Data Santri</h2>
-            
-            <!-- ➕ TAMBAH SANTRI BARU -->
-            <div class="bg-slate-950/60 border border-emerald-950/40 rounded-2xl p-4 space-y-3">
-                <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider">➕ Tambah Santri Baru</h3>
-                <div class="space-y-2">
-                    <input type="text" id="namaSantriBaru" placeholder="Masukkan nama santri..." class="w-full bg-slate-900 border border-emerald-950/40 rounded-xl p-3 text-sm text-slate-200">
-                    <div class="flex gap-2">
-                        <select id="tugasPiketBaru" class="flex-1 bg-slate-900 border border-emerald-950/40 rounded-xl p-2.5 text-sm text-slate-200">
-                            <option value="bukan-piket">Bukan Piket (Tambahan)</option>
-                            <option value="Sabtu">Sabtu</option>
-                            <option value="Minggu">Minggu</option>
-                            <option value="Senin">Senin</option>
-                            <option value="Selasa">Selasa</option>
-                            <option value="Rabu">Rabu</option>
-                            <option value="Kamis">Kamis</option>
-                        </select>
-                        <button onclick="tambahSantriBaru()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 rounded-xl text-sm">Tambah</button>
-                    </div>
+    </div>
+
+    <!-- MODAL KELOLA SANTRI (BARU & KELUAR) -->
+    <div id="kelolaSantriModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300 z-50">
+        <div class="bg-slate-950 border border-emerald-900/40 w-full max-w-sm rounded-3xl p-5 transform scale-95 transition-all duration-300 space-y-4 max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center border-b border-emerald-950/60 pb-3">
+                <h3 class="text-sm font-bold text-slate-100 flex items-center gap-1.5">⚙️ Manajemen Santri</h3>
+                <button onclick="closeKelolaSantriModal()" class="text-slate-400 hover:text-white text-lg font-bold">✕</button>
+            </div>
+
+            <!-- Form Tambah Santri -->
+            <div class="bg-slate-900 p-3 rounded-2xl border border-emerald-950/30 space-y-2.5">
+                <span class="block text-[10px] font-bold text-emerald-400 uppercase tracking-wider">➕ Tambah Santri Baru</span>
+                <input type="text" id="namaSantriBaru" placeholder="Nama lengkap santri..." class="w-full bg-slate-950 border border-emerald-950/60 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                <div class="flex gap-2">
+                    <select id="hariPiketSantriBaru" class="w-full bg-slate-950 border border-emerald-950/60 rounded-xl p-2 text-xs text-slate-200">
+                        <option value="Non-Piket">Non-Piket (Hanya Isya)</option>
+                        <option value="Sabtu">Piket Sabtu</option>
+                        <option value="Minggu">Piket Minggu</option>
+                        <option value="Senin">Piket Senin</option>
+                        <option value="Selasa">Piket Selasa</option>
+                        <option value="Rabu">Piket Rabu</option>
+                        <option value="Kamis">Piket Kamis</option>
+                    </select>
+                    <button onclick="tambahSantriBaru()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-2 rounded-xl shrink-0 transition cursor-pointer">Simpan</button>
                 </div>
             </div>
 
-            <!-- 👤 SANTRI AKTIF -->
-            <div class="bg-slate-950/60 border border-blue-950/40 rounded-2xl p-4 space-y-3">
-                <h3 class="text-xs font-bold text-blue-400 uppercase tracking-wider">👤 Daftar Santri Aktif</h3>
-                <p class="text-[10px] text-slate-400">Klik ❌ untuk mengeluarkan (riwayat tetap tersimpan)</p>
-                <div id="daftarSantriAktif" class="space-y-2 max-h-[250px] overflow-y-auto pr-1"></div>
-            </div>
-
-            <!-- 📦 SANTRI NONAKTIF -->
-            <div class="bg-slate-950/60 border border-slate-700/40 rounded-2xl p-4 space-y-3">
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">📦 Arsip Santri (Sudah Keluar)</h3>
-                <p class="text-[10px] text-slate-500">Klik ↩️ untuk aktifkan kembali</p>
-                <div id="daftarSantriNonaktif" class="space-y-2 max-h-[200px] overflow-y-auto pr-1"></div>
-            </div>
-
-            <div class="bg-emerald-950/20 border border-emerald-900/30 rounded-xl p-3 text-[10px] text-emerald-300">
-                🛡️ <strong>Catatan:</strong> Mengeluarkan santri TIDAK menghapus data absen, denda, dan sanksi yang sudah tercatat. Semua riwayat tetap tersimpan di sistem.
+            <!-- Daftar Santri Keluar / Hapus -->
+            <div class="flex-1 overflow-hidden flex flex-col">
+                <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">➖ Daftar Santri Aktif (Keluarkan Santri)</span>
+                <div id="listKelolaSantriContainer" class="space-y-2 overflow-y-auto pr-1 flex-1"></div>
             </div>
         </div>
     </div>
 
-    <!-- TOAST NOTIFIKASI -->
-    <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-800 text-slate-100 text-xs font-semibold px-4 py-3 rounded-2xl shadow-xl border border-emerald-950/60 flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none z-50">
+    <!-- NOTIFIKASI TOAST -->
+    <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-850 text-slate-100 text-xs font-semibold px-4 py-3 rounded-2xl shadow-xl border border-emerald-950/60 flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none z-50 w-[90%] max-w-xs text-center justify-center">
         <span id="toastIcon">✨</span>
         <span id="toastMessage">Perubahan disimpan!</span>
     </div>
 
+    <!-- MODAL KONFIRMASI RESET -->
+    <div id="confirmModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300 z-50">
+        <div class="bg-slate-950 border border-emerald-900/30 w-full max-w-xs rounded-3xl p-6 text-center transform scale-95 transition-all duration-300">
+            <div class="w-12 h-12 bg-red-900/30 border border-red-800 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">⚠️</div>
+            <h3 class="text-base font-bold text-slate-100 mb-2">Hapus Semua Data?</h3>
+            <p class="text-xs text-slate-400 mb-6">Tindakan ini akan menghapus semua riwayat absen, denda, dan daftar santri secara permanen.</p>
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="hideResetModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs py-2.5 px-4 rounded-xl cursor-pointer">Batal</button>
+                <button onclick="executeReset()" class="bg-red-600 hover:bg-red-500 text-white font-semibold text-xs py-2.5 px-4 rounded-xl shadow-lg cursor-pointer">Ya, Reset</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // === DATA AWAL ===
-        const JADWAL_AWAL = {
+        // Roster Bawaan Pesantren
+        const jadwalBawaan = {
             "Sabtu": ["Sabil", "Fatir", "Hafid"],
             "Minggu": ["Ale", "Noval", "Alif"],
             "Senin": ["Ihab", "Aswad", "Adit"],
@@ -200,440 +235,502 @@
             "Rabu": ["Maman", "Samsul"],
             "Kamis": ["Ikrom", "Trisno", "Aris"]
         };
-        const SANTRI_TAMBAHAN_AWAL = ["Bagio", "Syarif"];
-        const TARIF = { piket: 3000, sanksiDenda: 5000 };
-        let activeTab = 'piket';
+        const santriTambahanBawaan = ["Bagio", "Syarif"];
 
-        // === INISIALISASI DATA ===
-        let jadwal = JSON.parse(localStorage.getItem('jadwal_piket')) || JADWAL_AWAL;
-        let santriTambahan = JSON.parse(localStorage.getItem('santri_tambahan')) || SANTRI_TAMBAHAN_AWAL;
-        let santriNonaktif = JSON.parse(localStorage.getItem('santri_nonaktif')) || {};
+        const TARIF = { piket: 3000, sanksiDenda: 5000 };
+
+        let activeTab = 'piket';
+        let subTabDenda = 'uang';
+
+        // Load / Inisialisasi Database
+        let jadwal = JSON.parse(localStorage.getItem('jadwal_app')) || jadwalBawaan;
+        let santriTambahan = JSON.parse(localStorage.getItem('santri_tambahan_app')) || santriTambahanBawaan;
         let db = JSON.parse(localStorage.getItem('denda_app')) || {};
 
-        // === FUNGSI PENYIMPANAN ===
-        function saveData() {
-            localStorage.setItem('jadwal_piket', JSON.stringify(jadwal));
-            localStorage.setItem('santri_tambahan', JSON.stringify(santriTambahan));
-            localStorage.setItem('santri_nonaktif', JSON.stringify(santriNonaktif));
-            localStorage.setItem('denda_app', JSON.stringify(db));
+        function dapatkanSemuaSantri() {
+            return [...Object.values(jadwal).flat(), ...santriTambahan].sort();
         }
 
-        // === DAFTAR SEMUA SANTRI AKTIF ===
-        function daftarSemuaSantriAktif() {
-            const dariJadwal = Object.values(jadwal).flat();
-            return [...new Set([...dariJadwal, ...santriTambahan])].sort();
-        }
-
-        // === PASTIKAN SANTRI ADA DI DATABASE ===
-        function pastikanDiDB(nama) {
-            if (!db[nama]) {
-                db[nama] = { ja:0, so:0, di:0, ap:0, tp:0, sd:0, bt:0 };
-                saveData();
-            }
-        }
-
-        // === TAMBAH SANTRI BARU ===
-        function tambahSantriBaru() {
-            const input = document.getElementById('namaSantriBaru');
-            const nama = input.value.trim();
-            const hari = document.getElementById('tugasPiketBaru').value;
-            
-            if (!nama) { showToast('Masukkan nama santri!', '⚠️'); return; }
-            
-            const semuaAktif = daftarSemuaSantriAktif();
-            if (semuaAktif.includes(nama)) { showToast(`${nama} sudah terdaftar!`, '⚠️'); return; }
-            
-            // Jika dari arsip nonaktif → aktifkan kembali
-            if (santriNonaktif[nama]) {
-                delete santriNonaktif[nama];
-                if (hari === 'bukan-piket') {
-                    if (!santriTambahan.includes(nama)) santriTambahan.push(nama);
-                } else {
-                    if (!jadwal[hari]) jadwal[hari] = [];
-                    if (!jadwal[hari].includes(nama)) jadwal[hari].push(nama);
+        // Migrasi & Pemastian Struktur Data Lama Tetap Aman
+        function sinkronisasiDatabase() {
+            const listSemua = dapatkanSemuaSantri();
+            listSemua.forEach(n => {
+                if (!db[n]) db[n] = { ja: 0, so: 0, di: 0, ap: 0, tp: 0, sd: 0, bt: 0 };
+                else {
+                    if (db[n].ap === undefined) db[n].ap = 0;
+                    if (db[n].tp === undefined) db[n].tp = 0;
+                    if (db[n].di === undefined) db[n].di = 0;
+                    if (db[n].ja === undefined) db[n].ja = 0;
+                    if (db[n].so === undefined) db[n].so = 0;
+                    if (db[n].sd === undefined) db[n].sd = 0;
+                    if (db[n].bt === undefined) db[n].bt = 0;
                 }
-                pastikanDiDB(nama);
-                saveData();
-                input.value = '';
-                showToast(`✅ ${nama} diaktifkan kembali!`, '👤');
-                renderApp();
-                return;
-            }
-            
-            // Santri baru
-            if (hari === 'bukan-piket') {
-                santriTambahan.push(nama);
-            } else {
-                if (!jadwal[hari]) jadwal[hari] = [];
-                jadwal[hari].push(nama);
-            }
-            pastikanDiDB(nama);
-            saveData();
-            input.value = '';
-            showToast(`✅ ${nama} berhasil ditambahkan!`, '👤');
-            renderApp();
-        }
-
-        // === KELUARKAN SANTRI ===
-        function keluarkanSantri(nama) {
-            if (!confirm(`Yakin mengeluarkan ${nama}?\nRiwayat denda & absen TETAP TERSIMPAN.`)) return;
-            
-            Object.keys(jadwal).forEach(hari => {
-                jadwal[hari] = jadwal[hari].filter(n => n !== nama);
             });
-            santriTambahan = santriTambahan.filter(n => n !== nama);
-            santriNonaktif[nama] = { tanggalKeluar: new Date().toLocaleDateString('id-ID') };
-            saveData();
-            showToast(`✅ ${nama} telah dikeluarkan`, '📦');
-            renderApp();
+            save();
+        }
+        sinkronisasiDatabase();
+
+        function save() {
+            localStorage.setItem('denda_app', JSON.stringify(db));
+            localStorage.setItem('jadwal_app', JSON.stringify(jadwal));
+            localStorage.setItem('santri_tambahan_app', JSON.stringify(santriTambahan));
         }
 
-        // === AKTIFKAN KEMBALI SANTRI ===
-        function aktifkanKembali(nama, hari) {
-            if (!santriNonaktif[nama]) return;
-            delete santriNonaktif[nama];
-            if (hari && hari !== 'bukan-piket') {
-                if (!jadwal[hari]) jadwal[hari] = [];
-                jadwal[hari].push(nama);
-            } else {
-                santriTambahan.push(nama);
+        function handleLogoError() {
+            const container = document.getElementById('logoContainer');
+            if (container) {
+                container.innerHTML = `
+                    <div class="w-full h-full bg-emerald-50 flex flex-col items-center justify-center text-emerald-800 font-bold p-1 text-center">
+                        <span class="text-[32px] leading-none mb-0.5">🕌</span>
+                        <span class="text-[9px] tracking-tight leading-none">AL-MU'AWANAH</span>
+                    </div>
+                `;
             }
-            pastikanDiDB(nama);
-            saveData();
-            showToast(`✅ ${nama} aktif kembali!`, '↩️');
-            renderApp();
         }
 
-        // === LOGIKA DENDA ===
-        function hitungTotalDendaSantri(n) {
-            return (db[n].ja * TARIF.piket) + (db[n].so * TARIF.piket) + (db[n].sd || 0);
-        }
-        function hitungSisaDendaSantri(n) {
-            return hitungTotalDendaSantri(n) - db[n].di;
-        }
-        function dapatkanStatusSanksiIsya(n) {
-            const totalPelanggaran = db[n].ap + db[n].tp;
-            const totalSanksiHarus = Math.floor(totalPelanggaran / 5);
-            const sanksiDendaSelesai = Math.floor((db[n].sd || 0) / TARIF.sanksiDenda);
-            const sanksiBotakSelesai = db[n].bt || 0;
-            const totalSelesai = sanksiDendaSelesai + sanksiBotakSelesai;
-            const sisa = Math.max(0, totalSanksiHarus - totalSelesai);
-            return { totalPelanggaran, totalSanksiHarus, sanksiDendaSelesai, sanksiBotakSelesai, sisa };
-        }
-
-        // === PILIHAN SANKSI: SALING EKSKLUSIF ===
-        function eksekusiSanksi(n, tipe) {
-            const status = dapatkanStatusSanksiIsya(n);
-            if (status.sisa <= 0) {
-                showToast('Tidak ada sanksi yang harus dipilih!', 'ℹ️');
-                return;
-            }
-            if (tipe === 'denda') {
-                db[n].sd = (db[n].sd || 0) + TARIF.sanksiDenda;
-                showToast(`✅ ${n} memilih DENDA Rp5.000 — TIDAK di botak!`, '💰');
-            } else if (tipe === 'botak') {
-                db[n].bt = (db[n].bt || 0) + 1;
-                showToast(`✅ ${n} memilih BOTAK — TIDAK kena denda uang!`, '👩‍🦲');
-            }
-            saveData();
-            renderApp();
-        }
-
-        // === FUNGSI UPDATE DATA ===
-        function updatePiket(n, p, v) { db[n][p] = Math.max(0, db[n][p] + v); saveData(); renderApp(); showToast('Data diperbarui!', '💾'); }
-        function updateIsya(n, p, v) { db[n][p] = Math.max(0, db[n][p] + v); saveData(); renderApp(); showToast('Absen diperbarui!', '📝'); }
-        function koreksiParameter(n, p, v) { db[n][p] = Math.max(0, db[n][p] - v); saveData(); renderApp(); showToast('Dikoreksi!', '🔄'); }
-        function bayarDenda(n) { 
-            const el = document.getElementById('pay_'+n); 
-            const v = parseInt(el?.value); 
-            if(v>0){ db[n].di += v; saveData(); if(el) el.value=''; renderApp(); showToast(`Bayar Rp${v.toLocaleString('id-ID')}!`, '💵'); } 
-        }
-        function bayarDendaTabDenda(n) { 
-            const el = document.getElementById('pay_denda_'+n); 
-            const v = parseInt(el?.value); 
-            if(v>0){ db[n].di += v; saveData(); if(el) el.value=''; renderApp(); showToast(`Bayar Rp${v.toLocaleString('id-ID')}!`, '💵'); } 
-        }
-
-        // === NOTIFIKASI TOAST ===
-        function showToast(m, i='✨') {
-            const t = document.getElementById('toast');
-            document.getElementById('toastIcon').innerText = i;
-            document.getElementById('toastMessage').innerText = m;
-            t.classList.remove('translate-y-20','opacity-0');
-            setTimeout(()=>{ t.classList.add('translate-y-20','opacity-0'); }, 3000);
-        }
-
-        // === NAVIGASI TAB ===
         function switchTab(tabId) {
             activeTab = tabId;
-            ['piket','isya','denda','rekap','pengaturan'].forEach(t => {
+            ['piket', 'isya', 'denda', 'rekap'].forEach(t => {
                 const btn = document.getElementById(`tab-${t}`);
                 const panel = document.getElementById(`panel-${t}`);
                 if (t === tabId) {
-                    btn.className = "text-[10px] font-bold py-2.5 rounded-xl transition-all bg-emerald-600 text-white shadow-lg";
+                    btn.className = "text-[11px] font-bold py-2.5 rounded-xl transition-all duration-200 bg-emerald-600 text-white shadow-lg shadow-emerald-950/50 cursor-pointer text-center relative";
                     panel.classList.remove('hidden');
                 } else {
-                    btn.className = "text-[10px] font-bold py-2.5 rounded-xl transition-all text-slate-400 hover:text-emerald-300";
+                    btn.className = "text-[11px] font-bold py-2.5 rounded-xl transition-all duration-200 text-slate-400 hover:text-emerald-300 cursor-pointer text-center relative";
                     panel.classList.add('hidden');
                 }
             });
             renderApp();
         }
 
-        // === FUNGSI RENDER UTAMA ===
-        function renderApp() {
-            const day = document.getElementById('daySelect').value;
-            const semuaAktif = daftarSemuaSantriAktif();
+        function switchSubDenda(sub) {
+            subTabDenda = sub;
+            const btnUang = document.getElementById('subtab-uang');
+            const btnBotak = document.getElementById('subtab-botak');
+            const panelUang = document.getElementById('panel-denda-uang');
+            const panelBotak = document.getElementById('panel-denda-botak');
 
-            // === TAB 5: PENGATURAN ===
-            if (activeTab === 'pengaturan') {
-                const kontainerAktif = document.getElementById('daftarSantriAktif');
-                kontainerAktif.innerHTML = '';
-                Object.keys(jadwal).forEach(hari => {
-                    jadwal[hari].forEach(nama => {
-                        kontainerAktif.innerHTML += `
-                            <div class="bg-slate-900/50 p-2.5 rounded-xl border border-emerald-950/30 flex justify-between items-center">
-                                <div><span class="font-medium text-sm">${nama}</span> <span class="text-[9px] text-emerald-400 ml-2">Piket ${hari}</span></div>
-                                <button onclick="keluarkanSantri('${nama}')" class="text-red-400 hover:text-red-300 text-xs px-2 py-1 rounded-lg bg-red-950/30">❌ Keluarkan</button>
-                            </div>
-                        `;
-                    });
-                });
-                santriTambahan.forEach(nama => {
-                    kontainerAktif.innerHTML += `
-                        <div class="bg-slate-900/50 p-2.5 rounded-xl border border-emerald-950/30 flex justify-between items-center">
-                            <div><span class="font-medium text-sm">${nama}</span> <span class="text-[9px] text-slate-400 ml-2">Bukan Piket</span></div>
-                            <button onclick="keluarkanSantri('${nama}')" class="text-red-400 hover:text-red-300 text-xs px-2 py-1 rounded-lg bg-red-950/30">❌ Keluarkan</button>
-                        </div>
-                    `;
-                });
-                if (!kontainerAktif.innerHTML) kontainerAktif.innerHTML = '<p class="text-slate-500 text-xs">Belum ada santri aktif</p>';
-
-                const kontainerNonaktif = document.getElementById('daftarSantriNonaktif');
-                kontainerNonaktif.innerHTML = '';
-                Object.keys(santriNonaktif).forEach(nama => {
-                    kontainerNonaktif.innerHTML += `
-                        <div class="bg-slate-900/30 p-2.5 rounded-xl border border-slate-700/40 flex justify-between items-center">
-                            <div><span class="font-medium text-sm text-slate-400">${nama}</span> <span class="text-[9px] text-slate-500 ml-2">Keluar: ${santriNonaktif[nama].tanggalKeluar}</span></div>
-                            <select onchange="if(this.value){aktifkanKembali('${nama}',this.value);this.value='';}" class="text-xs bg-slate-800 border border-slate-600 rounded px-2 py-1 text-slate-200">
-                                <option value="">↩️ Aktifkan...</option>
-                                <option value="bukan-piket">Bukan Piket</option>
-                                <option value="Sabtu">Sabtu</option>
-                                <option value="Minggu">Minggu</option>
-                                <option value="Senin">Senin</option>
-                                <option value="Selasa">Selasa</option>
-                                <option value="Rabu">Rabu</option>
-                                <option value="Kamis">Kamis</option>
-                            </select>
-                        </div>
-                    `;
-                });
-                if (!Object.keys(santriNonaktif).length) kontainerNonaktif.innerHTML = '<p class="text-slate-500 text-xs">Belum ada santri yang keluar</p>';
+            if (sub === 'uang') {
+                btnUang.className = "py-2 rounded-lg bg-emerald-600 text-white cursor-pointer";
+                btnBotak.className = "py-2 rounded-lg text-slate-400 hover:text-white cursor-pointer";
+                panelUang.classList.remove('hidden');
+                panelBotak.classList.add('hidden');
+            } else {
+                btnBotak.className = "py-2 rounded-lg bg-amber-600 text-slate-950 cursor-pointer";
+                btnUang.className = "py-2 rounded-lg text-slate-400 hover:text-white cursor-pointer";
+                panelBotak.classList.remove('hidden');
+                panelUang.classList.add('hidden');
             }
+        }
 
-            // === TAB 1: PIKET ===
+        function hitungTotalDendaSantri(n) {
+            return (db[n].ja * TARIF.piket) + (db[n].so * TARIF.piket) + (db[n].sd || 0);
+        }
+
+        function hitungSisaDendaSantri(n) {
+            return hitungTotalDendaSantri(n) - db[n].di;
+        }
+
+        function dapatkanStatusSanksiIsya(n) {
+            const totalPelanggaranIsya = db[n].ap + db[n].tp;
+            const totalSanksiHarus = Math.floor(totalPelanggaranIsya / 5);
+            const sanksiDendaDiselesaikan = Math.floor((db[n].sd || 0) / TARIF.sanksiDenda);
+            const sanksiBotakDiselesaikan = db[n].bt || 0;
+            const totalSanksiSelesai = sanksiDendaDiselesaikan + sanksiBotakDiselesaikan;
+            
+            return {
+                totalPelanggaran: totalPelanggaranIsya,
+                totalSanksiHarus: totalSanksiHarus,
+                sanksiTersisa: Math.max(0, totalSanksiHarus - totalSanksiSelesai)
+            };
+        }
+
+        function renderApp() {
+            const listSemua = dapatkanSemuaSantri();
+            const day = document.getElementById('daySelect').value;
+
+            // --- TAB 1: PIKET ---
             const piketContainer = document.getElementById('piketListContainer');
             piketContainer.innerHTML = '';
             if (jadwal[day]) {
                 jadwal[day].forEach(n => {
-                    pastikanDiDB(n);
                     const sisa = hitungSisaDendaSantri(n);
                     piketContainer.innerHTML += `
                         <div class="bg-slate-950/70 p-4 rounded-2xl border border-emerald-950/30">
                             <div class="flex justify-between items-center mb-3">
-                                <span class="font-extrabold text-slate-200 text-sm">${n}</span>
-                                <span class="text-xs font-bold ${sisa>0?'text-rose-400 bg-rose-950/30':'text-emerald-400 bg-emerald-950/30'} px-2.5 py-1 rounded-full">
+                                <span class="font-extrabold text-slate-200 text-sm tracking-wide">${n}</span>
+                                <span class="text-xs font-bold ${sisa > 0 ? 'text-rose-400 bg-rose-950/30' : 'text-emerald-400 bg-emerald-950/30'} px-2.5 py-1 rounded-full border border-emerald-950/50">
                                     Sisa: Rp${sisa.toLocaleString('id-ID')}
                                 </span>
                             </div>
                             <div class="grid grid-cols-2 gap-2 mb-3 text-[10px] font-semibold">
-                                <button onclick="updatePiket('${n}','ja',1)" class="bg-slate-900 border border-emerald-950/30 hover:bg-rose-950/30 py-2.5 px-2 rounded-xl flex justify-between items-center">
+                                <button onclick="updatePiket('${n}','ja',1)" class="bg-slate-900 border border-emerald-950/30 hover:bg-rose-950/30 py-2.5 px-2 rounded-xl text-left flex justify-between items-center transition cursor-pointer">
                                     <span class="text-slate-300">Tak Jama'ah</span>
-                                    <span class="bg-rose-900/50 text-rose-300 px-1.5 py-0.5 rounded">${db[n].ja}x</span>
+                                    <span class="bg-rose-900/50 text-rose-300 px-1.5 py-0.5 rounded text-[9px] font-bold">${db[n].ja}x</span>
                                 </button>
-                                <button onclick="updatePiket('${n}','so',1)" class="bg-slate-900 border border-emerald-950/30 hover:bg-rose-950/30 py-2.5 px-2 rounded-xl flex justify-between items-center">
+                                <button onclick="updatePiket('${n}','so',1)" class="bg-slate-900 border border-emerald-950/30 hover:bg-rose-950/30 py-2.5 px-2 rounded-xl text-left flex justify-between items-center transition cursor-pointer">
                                     <span class="text-slate-300">Tak Sorogan</span>
-                                    <span class="bg-rose-900/50 text-rose-300 px-1.5 py-0.5 rounded">${db[n].so}x</span>
+                                    <span class="bg-rose-900/50 text-rose-300 px-1.5 py-0.5 rounded text-[9px] font-bold">${db[n].so}x</span>
                                 </button>
                             </div>
-                            <div class="flex justify-end gap-3 mb-3 text-[9px] text-slate-500">
-                                <button onclick="updatePiket('${n}','ja',-1)" class="hover:text-rose-400">- Koreksi Sholat</button>
-                                <button onclick="updatePiket('${n}','so',-1)" class="hover:text-rose-400">- Koreksi Sorogan</button>
+                            <div class="flex justify-end gap-3 mb-3 text-[9px] text-slate-500 font-medium">
+                                <button onclick="updatePiket('${n}','ja',-1)" class="hover:text-rose-400 transition cursor-pointer">- Koreksi Sholat</button>
+                                <button onclick="updatePiket('${n}','so',-1)" class="hover:text-rose-400 transition cursor-pointer">- Koreksi Sorogan</button>
                             </div>
                             <div class="flex gap-2">
-                                <input type="number" id="pay_${n}" class="w-full bg-slate-950 border border-emerald-950/40 rounded-xl px-3 py-1.5 text-xs" placeholder="Rp Bayar...">
-                                <button onclick="bayarDenda('${n}')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-1.5 rounded-xl text-xs">Bayar</button>
+                                <input type="number" id="pay_${n}" class="w-full bg-slate-950 border border-emerald-950/40 rounded-xl px-3 py-1.5 text-xs text-slate-100 placeholder-slate-600 focus:outline-none" placeholder="Rp Bayar denda...">
+                                <button onclick="bayarDenda('${n}')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-1.5 rounded-xl text-xs shadow-md transition cursor-pointer">Bayar</button>
                             </div>
                         </div>
                     `;
                 });
             }
 
-            // === TAB 2: ISYA ===
+            // --- TAB 2: ISYA ---
             const searchVal = document.getElementById('searchInput').value.toLowerCase();
             const isyaContainer = document.getElementById('isyaListContainer');
             isyaContainer.innerHTML = '';
             let countMatched = 0;
-            semuaAktif.forEach(n => {
-                pastikanDiDB(n);
+
+            listSemua.forEach(n => {
                 if (searchVal && !n.toLowerCase().includes(searchVal)) return;
                 countMatched++;
-                const status = dapatkanStatusSanksiIsya(n);
+                const sanksiInfo = dapatkanStatusSanksiIsya(n);
                 const isTambahan = santriTambahan.includes(n);
 
                 let panelSanksiHTML = '';
-                if (status.sisa > 0) {
+                if (sanksiInfo.sanksiTersisa > 0) {
                     panelSanksiHTML = `
-                        <div class="mt-3 bg-amber-950/35 border border-amber-900/45 rounded-xl p-2.5 text-center">
-                            <span class="block text-[10px] font-bold text-amber-300 uppercase mb-1.5 animate-pulse">⚠️ SANKSI! Pilih salah satu (${status.sisa}x)</span>
+                        <div class="mt-3 bg-red-950/35 border border-red-900/45 rounded-xl p-2.5 text-center">
+                            <span class="block text-[10px] font-bold text-red-300 uppercase tracking-wide mb-1.5 animate-pulse">
+                                🚨 Sanksi Isya (${sanksiInfo.sanksiTersisa}x Belum Dipilih)
+                            </span>
                             <div class="grid grid-cols-2 gap-1.5">
-                                <button onclick="eksekusiSanksi('${n}','denda')" class="bg-rose-900 hover:bg-rose-800 text-white text-[9px] font-bold py-1.5 px-2 rounded-lg">💰 Denda Rp5.000</button>
-                                <button onclick="eksekusiSanksi('${n}','botak')" class="bg-amber-600 hover:bg-amber-500 text-slate-950 text-[9px] font-bold py-1.5 px-2 rounded-lg">👩‍🦲 Botak</button>
+                                <button onclick="eksekusiSanksi('${n}', 'denda')" class="bg-red-900 hover:bg-red-800 text-white text-[9px] font-bold py-1.5 px-2 rounded-lg transition cursor-pointer">Denda Rp5.000</button>
+                                <button onclick="eksekusiSanksi('${n}', 'botak')" class="bg-amber-600 hover:bg-amber-500 text-slate-950 text-[9px] font-black py-1.5 px-2 rounded-lg transition cursor-pointer">Hukum Botak 👩‍🦲</button>
                             </div>
-                            <p class="text-[8px] text-slate-400 mt-1">Pilih salah satu — tidak keduanya!</p>
-                        </div>
-                    `;
-                }
-
-                let koreksiHTML = '';
-                if (db[n].sd > 0 || db[n].bt > 0) {
-                    koreksiHTML = `
-                        <div class="flex justify-end gap-3 mt-2 text-[9px] text-slate-500">
-                            ${db[n].sd>0?`<button onclick="koreksiParameter('${n}','sd',5000)" class="hover:text-rose-400">- Koreksi Denda</button>`:''}
-                            ${db[n].bt>0?`<button onclick="koreksiParameter('${n}','bt',1)" class="hover:text-amber-400">- Koreksi Botak</button>`:''}
                         </div>
                     `;
                 }
 
                 isyaContainer.innerHTML += `
-                    <div class="bg-slate-950/60 p-3.5 rounded-2xl border ${status.sisa>0?'border-amber-900/40':'border-emerald-950/30'}">
-                        <div class="flex justify-between items-start mb-3">
+                    <div class="bg-slate-950/60 p-3.5 rounded-2xl border ${sanksiInfo.sanksiTersisa > 0 ? 'border-red-900/40' : 'border-emerald-900/10'} flex flex-col justify-between gap-1">
+                        <div class="flex justify-between items-start">
                             <div>
                                 <div class="flex items-center gap-1.5 flex-wrap">
                                     <span class="font-bold text-slate-100 text-xs">${n}</span>
-                                    ${isTambahan?'<span class="text-[8px] bg-emerald-950 text-emerald-300 px-1.5 py-0.2 rounded">Non-piket</span>':''}
-                                    ${db[n].bt>0?`<span class="text-[8px] bg-amber-950 text-amber-300 px-1.5 py-0.2 rounded">👩‍🦲 Botak ${db[n].bt}x</span>`:''}
-                                    ${db[n].sd>0?`<span class="text-[8px] bg-rose-950 text-rose-300 px-1.5 py-0.2 rounded">💰 Denda Sanksi Rp${db[n].sd.toLocaleString('id-ID')}</span>`:''}
+                                    ${isTambahan ? '<span class="text-[8px] bg-emerald-950 text-emerald-300 border border-emerald-900/50 px-1.5 py-0.2 rounded font-medium">Non-piket</span>' : ''}
+                                    ${db[n].bt > 0 ? `<span class="text-[8px] bg-slate-900 text-amber-400 border border-amber-900/30 px-1 py-0.2 rounded flex items-center gap-0.5 font-bold">👩‍🦲 Botak ${db[n].bt}x</span>` : ''}
                                 </div>
+                                <span class="block text-[9px] text-slate-400 mt-1">Sanksi Denda Aktif: Rp${(db[n].sd || 0).toLocaleString('id-ID')}</span>
                             </div>
-                            <div class="text-[9px] text-right">
-                                <div class="text-slate-400">Pelanggaran: <strong class="text-emerald-400">${status.totalPelanggaran}x</strong></div>
-                                <div class="flex gap-1 mt-1">
-                                    <span class="bg-rose-950/50 text-rose-300 px-1.5 py-0.2 rounded">Alpa: ${db[n].ap}</span>
-                                    <span class="bg-amber-950/50 text-amber-300 px-1.5 py-0.2 rounded">Late: ${db[n].tp}</span>
+                            <div class="flex flex-col items-end gap-1 text-[9px]">
+                                <span class="text-slate-400">Pelanggaran Isya: <strong class="text-emerald-400 font-bold">${sanksiInfo.totalPelanggaran}x</strong></span>
+                                <div class="flex gap-1">
+                                    <span class="bg-rose-950/50 text-rose-300 px-1.5 py-0.2 rounded border border-rose-900/20">Alpa: ${db[n].ap}</span>
+                                    <span class="bg-amber-950/50 text-amber-300 px-1.5 py-0.2 rounded border border-amber-900/20">Late: ${db[n].tp}</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="grid grid-cols-2 gap-2 text-[10px] font-semibold">
-                            <div class="flex items-center bg-slate-900 rounded-xl overflow-hidden justify-between border border-emerald-950/35">
-                                <span class="pl-2 text-rose-300 text-[9px]">Alpa</span>
+
+                        <div class="grid grid-cols-2 gap-2 text-[10px] font-semibold mt-2">
+                            <div class="flex items-center bg-slate-900 border border-emerald-950/35 rounded-xl overflow-hidden justify-between">
+                                <span class="pl-2 text-rose-300 text-[9px]">Alpa (Absen)</span>
                                 <div class="flex">
-                                    <button onclick="updateIsya('${n}','ap',-1)" class="px-2.5 py-1.5 hover:bg-slate-800 text-slate-400">-</button>
-                                    <button onclick="updateIsya('${n}','ap',1)" class="px-3 py-1.5 bg-rose-900/40 hover:bg-rose-900/60 text-rose-200 border-l border-rose-900/25">+</button>
+                                    <button onclick="updateIsya('${n}', 'ap', -1)" class="px-2.5 py-1.5 hover:bg-slate-800 text-slate-400 cursor-pointer">-</button>
+                                    <button onclick="updateIsya('${n}', 'ap', 1)" class="px-3 py-1.5 bg-rose-900/40 hover:bg-rose-900/60 text-rose-200 border-l border-rose-900/25 cursor-pointer">+</button>
                                 </div>
                             </div>
-                            <div class="flex items-center bg-slate-900 rounded-xl overflow-hidden justify-between border border-emerald-950/35">
+                            <div class="flex items-center bg-slate-900 border border-emerald-950/35 rounded-xl overflow-hidden justify-between">
                                 <span class="pl-2 text-amber-300 text-[9px]">Terlambat</span>
                                 <div class="flex">
-                                    <button onclick="updateIsya('${n}','tp',-1)" class="px-2.5 py-1.5 hover:bg-slate-800 text-slate-400">-</button>
-                                    <button onclick="updateIsya('${n}','tp',1)" class="px-3 py-1.5 bg-amber-900/40 hover:bg-amber-900/60 text-amber-200 border-l border-amber-900/25">+</button>
+                                    <button onclick="updateIsya('${n}', 'tp', -1)" class="px-2.5 py-1.5 hover:bg-slate-800 text-slate-400 cursor-pointer">-</button>
+                                    <button onclick="updateIsya('${n}', 'tp', 1)" class="px-3 py-1.5 bg-amber-900/40 hover:bg-amber-900/60 text-amber-200 border-l border-amber-900/25 cursor-pointer">+</button>
                                 </div>
                             </div>
                         </div>
                         ${panelSanksiHTML}
-                        ${koreksiHTML}
                     </div>
                 `;
             });
             document.getElementById('totalSantriBadge').innerText = `${countMatched} Santri`;
 
-            // === TAB 3: DENDA ===
-            const dendaUangContainer = document.getElementById('dendaUangContainer');
-            const sanksiIsyaContainer = document.getElementById('sanksiIsyaContainer');
-            dendaUangContainer.innerHTML = '';
-            sanksiIsyaContainer.innerHTML = '';
-            let totalTagihan = 0, totalSisa = 0;
-            let adaDendaUang = false, adaSanksi = false;
+            // --- TAB 3: DENDA BERJALAN ---
+            const panelDendaUang = document.getElementById('panel-denda-uang');
+            const panelDendaBotak = document.getElementById('panel-denda-botak');
+            panelDendaUang.innerHTML = '';
+            panelDendaBotak.innerHTML = '';
 
-            semuaAktif.forEach(n => {
-                const totalDenda = hitungTotalDendaSantri(n);
-                const sisa = hitungSisaDendaSantri(n);
-                const status = dapatkanStatusSanksiIsya(n);
-                totalTagihan += totalDenda;
-                totalSisa += sisa;
+            let jumlahDendaUangAktif = 0;
+            let jumlahSanksiBotakAktif = 0;
 
-                if (sisa > 0) {
-                    adaDendaUang = true;
-                    dendaUangContainer.innerHTML += `
-                        <div class="bg-slate-900/60 p-3 rounded-xl border border-rose-900/20">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="font-bold text-slate-200 text-sm">${n}</span>
-                                <span class="text-rose-400 font-bold text-sm">Rp${sisa.toLocaleString('id-ID')}</span>
+            listSemua.forEach(n => {
+                const sisaDenda = hitungSisaDendaSantri(n);
+                if (sisaDenda > 0) {
+                    jumlahDendaUangAktif++;
+                    panelDendaUang.innerHTML += `
+                        <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-rose-900/30 flex flex-col gap-2 text-xs">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-slate-200">${n}</span>
+                                <span class="text-rose-400 font-extrabold">Sisa: Rp${sisaDenda.toLocaleString('id-ID')}</span>
                             </div>
-                            <div class="text-[10px] text-slate-400 space-y-0.5 mb-2">
-                                ${db[n].ja>0?`<div>🚫 Tak Ashar ${db[n].ja}x = Rp${(db[n].ja*3000).toLocaleString('id-ID')}</div>`:''}
-                                ${db[n].so>0?`<div>📖 Tak Sorogan ${db[n].so}x = Rp${(db[n].so*3000).toLocaleString('id-ID')}</div>`:''}
-                                ${db[n].sd>0?`<div>💰 Sanksi Denda = Rp${db[n].sd.toLocaleString('id-ID')}</div>`:''}
-                                ${db[n].di>0?`<div class="text-emerald-400">✓ Sudah bayar: Rp${db[n].di.toLocaleString('id-ID')}</div>`:''}
+                            <div class="text-[10px] text-slate-400 bg-slate-900/60 p-2 rounded-xl space-y-1">
+                                <div class="flex justify-between"><span>Piket Ashar (Sholat/Sorogan):</span><span>Rp${((db[n].ja + db[n].so)*3000).toLocaleString('id-ID')}</span></div>
+                                <div class="flex justify-between"><span>Sanksi Denda Isya:</span><span>Rp${(db[n].sd||0).toLocaleString('id-ID')}</span></div>
+                                <div class="flex justify-between border-t border-slate-800 pt-1 text-emerald-400"><span>Sudah Dibayar:</span><span>Rp${db[n].di.toLocaleString('id-ID')}</span></div>
                             </div>
                             <div class="flex gap-2">
-                                <input type="number" id="pay_denda_${n}" class="w-full bg-slate-950 border border-emerald-950/40 rounded-lg px-2.5 py-1.5 text-xs" placeholder="Rp Bayar...">
-                                <button onclick="bayarDendaTabDenda('${n}')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs">Bayar</button>
+                                <input type="number" id="pay_denda_${n}" class="w-full bg-slate-900 border border-emerald-950/50 rounded-xl px-2.5 py-1 text-xs text-slate-100 placeholder-slate-600 focus:outline-none" placeholder="Bayar Rp...">
+                                <button onclick="bayarDendaAtasName('${n}', 'pay_denda_${n}')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1 rounded-xl text-xs shrink-0 cursor-pointer">Pelunasan</button>
                             </div>
                         </div>
                     `;
                 }
 
-                if (status.sisa > 0 || db[n].sd > 0 || db[n].bt > 0) {
-                    adaSanksi = true;
-                    sanksiIsyaContainer.innerHTML += `
-                        <div class="bg-slate-900/60 p-3 rounded-xl border ${status.sisa>0?'border-amber-500/40':'border-slate-700/40'}">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="font-bold text-slate-200 text-sm">${n}</span>
-                                ${status.sisa>0 
-                                    ? `<span class="text-amber-400 font-bold text-xs animate-pulse">⚠️ PILIH! ${status.sisa}x sanksi</span>`
-                                    : `<span class="text-emerald-400 font-bold text-xs">✓ Selesai</span>`
-                                }
+                if (db[n].bt > 0) {
+                    jumlahSanksiBotakAktif += db[n].bt;
+                    panelDendaBotak.innerHTML += `
+                        <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-amber-900/30 flex justify-between items-center">
+                            <div>
+                                <span class="font-bold text-slate-200 text-xs block">${n}</span>
+                                <span class="text-[10px] text-amber-400 font-semibold">👩‍🦲 Sanksi Botak: ${db[n].bt} Kali</span>
                             </div>
-                            <div class="text-[10px] text-slate-400 space-y-0.5 mb-2">
-                                <div>Pelanggaran Isya: ${status.totalPelanggaran}x → Sanksi: ${status.totalSanksiHarus}x</div>
-                                <div class="flex gap-3">
-                                    ${status.sanksiDendaSelesai>0?`<span class="text-rose-400">💰 Denda: ${status.sanksiDendaSelesai}x</span>`:''}
-                                    ${status.sanksiBotakSelesai>0?`<span class="text-amber-400">👩‍🦲 Botak: ${status.sanksiBotakSelesai}x</span>`:''}
-                                </div>
-                            </div>
-                            ${status.sisa>0 ? `
-                                <div class="grid grid-cols-2 gap-2">
-                                    <button onclick="eksekusiSanksi('${n}','denda')" class="bg-rose-900/80 hover:bg-rose-800 text-white text-[10px] font-bold py-2 rounded-lg">💰 Denda Rp5.000</button>
-                                    <button onclick="eksekusiSanksi('${n}','botak')" class="bg-amber-600 hover:bg-amber-500 text-slate-950 text-[10px] font-bold py-2 rounded-lg">👩‍🦲 Botak</button>
-                                </div>
-                                <p class="text-[9px] text-slate-500 text-center mt-1">Pilih salah satu saja!</p>
-                            ` : ''}
+                            <button onclick="koreksiParameter('${n}', 'bt', 1)" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-[10px] cursor-pointer">
+                                Selesai Dibotak ✓
+                            </button>
                         </div>
                     `;
                 }
             });
 
-            if (!adaDendaUang) dendaUangContainer.innerHTML = `<div class="text-center py-4 text-slate-500 text-xs">🎉 Tidak ada denda uang yang belum lunas</div>`;
-            if (!adaSanksi) sanksiIsyaContainer.innerHTML = `<div class="text-center py-4 text-slate-500 text-xs">✅ Tidak ada sanksi Isya yang tertunda</div>`;
+            if (panelDendaUang.innerHTML === '') {
+                panelDendaUang.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">🎉 Tidak ada denda uang yang berjalan.</div>`;
+            }
+            if (panelDendaBotak.innerHTML === '') {
+                panelDendaBotak.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">✨ Tidak ada santri dengan sanksi botak aktif.</div>`;
+            }
 
-            document.getElementById('statDendaTotal').innerText = `Rp${totalTagihan.toLocaleString('id-ID')}`;
-            document.getElementById('statDendaSisa').innerText = `Rp${totalSisa.toLocaleString('id-ID')}`;
+            const badgeDenda = document.getElementById('badgeDendaAktif');
+            const totalAktif = jumlahDendaUangAktif + jumlahSanksiBotakAktif;
+            document.getElementById('totalDendaBerjalanBadge').innerText = `${totalAktif} Aktif`;
 
-            // === TAB 4: REKAP ===
+            if (totalAktif > 0) {
+                badgeDenda.classList.remove('hidden');
+                badgeDenda.innerText = totalAktif;
+            } else {
+                badgeDenda.classList.add('hidden');
+            }
+
+            // --- TAB 4: REKAP ---
             const summaryCont = document.getElementById('summaryContainer');
             summaryCont.innerHTML = '';
-            let totalSemuaDenda = 0, totalSemuaBayar = 0;
-            semuaAktif.forEach(n => {
-                pastikanDiDB(n);
-                const totalDenda = hitungTotalDendaSantri(n);
+            let totalDendaPesantren = 0;
+            let totalBayarPesantren = 0;
+
+            listSemua.forEach(n => {
                 const sisa = hitungSisaDendaSantri(n);
-                totalSemuaDenda += totalDenda;
-                totalSemuaBayar += db[n].di;
-                const status = dapatkanStatusSanksiIsya(n);
+                const totalDenda = hitungTotalDendaSantri(n);
+                totalDendaPesantren += totalDenda;
+                totalBayarPesantren += db[n].di;
                 const isTambahan = santriTambahan.includes(n);
 
-                summaryCont.innerHTML += `
-                    <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-700/40">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="font-bold text-slate-200 text-sm">${n} ${isTambahan?'<span class="text-[8px] bg-emerald-950 text-emerald-300 px-1.5 py-0.2 rounded ml-1">Non-piket</span>
+                if (totalDenda > 0 || db[n].di > 0 || db[n].bt > 0) {
+                    summaryCont.innerHTML += `
+                        <div class="bg-slate-950/70 p-3.5 rounded-2xl border border-emerald-950/40 text-xs">
+                            <div class="flex justify-between items-start mb-2 font-bold">
+                                <div>
+                                    <div class="flex items-center gap-1.5 flex-wrap">
+                                        <span class="text-slate-200">${n}</span>
+                                        ${isTambahan ? '<span class="text-[8px] bg-emerald-950 text-emerald-300 px-1 py-0.2 rounded font-normal">Non-piket</span>' : ''}
+                                        ${db[n].bt > 0 ? `<span class="text-[8px] text-amber-400 font-extrabold">👩‍🦲 Botak ${db[n].bt}x</span>` : ''}
+                                    </div>
+                                    <span class="block text-[8px] text-slate-500 font-normal mt-0.5">Total Denda: Rp${totalDenda.toLocaleString('id-ID')}</span>
+                                </div>
+                                <span class="${sisa > 0 ? 'text-rose-400' : 'text-emerald-400'}">Sisa: Rp${sisa.toLocaleString('id-ID')}</span>
+                            </div>
+                            <button onclick="bagikanLaporan('${n}')" class="w-full bg-emerald-650 hover:bg-emerald-600 text-white text-[10px] font-bold py-1.5 px-3 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer">
+                                💬 Bagikan Laporan Ke Wali Santri
+                            </button>
+                        </div>
+                    `;
+                }
+            });
+
+            if (summaryCont.innerHTML === '') {
+                summaryCont.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">🎉 Semua santri tertib, tidak ada denda aktif!</div>`;
+            }
+
+            document.getElementById('statTotalDenda').innerText = `Rp${totalDendaPesantren.toLocaleString('id-ID')}`;
+            document.getElementById('statTotalBayar').innerText = `Rp${totalBayarPesantren.toLocaleString('id-ID')}`;
+        }
+
+        // Action Handlers
+        function bayarDendaAtasName(n, inputId) {
+            const input = document.getElementById(inputId);
+            const val = parseInt(input.value);
+            if (val && val > 0) {
+                db[n].di += val;
+                save();
+                input.value = '';
+                renderApp();
+                showToast(`Pembayaran Rp${val.toLocaleString('id-ID')} disimpan!`, "💵");
+            }
+        }
+
+        function bayarDenda(n) { bayarDendaAtasName(n, 'pay_' + n); }
+
+        function updatePiket(n, parameter, nilai) {
+            if (parameter === 'ja') db[n].ja = Math.max(0, db[n].ja + nilai);
+            else db[n].so = Math.max(0, db[n].so + nilai);
+            save(); renderApp(); showToast(`Data piket ${n} diperbarui!`, "💾");
+        }
+
+        function updateIsya(n, parameter, nilai) {
+            if (parameter === 'ap') db[n].ap = Math.max(0, db[n].ap + nilai);
+            else if (parameter === 'tp') db[n].tp = Math.max(0, db[n].tp + nilai);
+            save(); renderApp(); showToast(`Absensi Isya ${n} diperbarui!`, "📝");
+        }
+
+        function eksekusiSanksi(n, tipe) {
+            if (tipe === 'denda') {
+                db[n].sd = (db[n].sd || 0) + TARIF.sanksiDenda;
+                showToast(`Sanksi denda +Rp5.000 untuk ${n}!`, "💵");
+            } else if (tipe === 'botak') {
+                db[n].bt = (db[n].bt || 0) + 1;
+                showToast(`${n} menjalani sanksi botak 👩‍🦲!`, "✂️");
+            }
+            save(); renderApp();
+        }
+
+        function koreksiParameter(n, parameter, nilai) {
+            if (db[n][parameter] !== undefined) {
+                db[n][parameter] = Math.max(0, db[n][parameter] - nilai);
+                save(); renderApp(); showToast(`Data ${n} diperbarui!`, "🔄");
+            }
+        }
+
+        // KELOLA SANTRI (TAMBAH / KELUAR)
+        function openKelolaSantriModal() {
+            renderKelolaSantriList();
+            const modal = document.getElementById('kelolaSantriModal');
+            modal.classList.remove('pointer-events-none', 'opacity-0');
+            modal.querySelector('div').classList.remove('scale-95');
+        }
+
+        function closeKelolaSantriModal() {
+            const modal = document.getElementById('kelolaSantriModal');
+            modal.classList.add('pointer-events-none', 'opacity-0');
+            modal.querySelector('div').classList.add('scale-95');
+        }
+
+        function renderKelolaSantriList() {
+            const container = document.getElementById('listKelolaSantriContainer');
+            container.innerHTML = '';
+            const listSemua = dapatkanSemuaSantri();
+
+            listSemua.forEach(n => {
+                let statusPiket = "Non-Piket";
+                for (let h in jadwal) {
+                    if (jadwal[h].includes(n)) { statusPiket = `Piket ${h}`; break; }
+                }
+                container.innerHTML += `
+                    <div class="bg-slate-900 p-2.5 rounded-xl border border-emerald-950/30 flex justify-between items-center text-xs">
+                        <div>
+                            <span class="font-bold text-slate-200 block">${n}</span>
+                            <span class="text-[9px] text-slate-400">${statusPiket}</span>
+                        </div>
+                        <button onclick="keluarkanSantri('${n}')" class="bg-rose-950/60 hover:bg-rose-900 border border-rose-900/50 text-rose-300 text-[10px] px-2.5 py-1 rounded-lg transition cursor-pointer">
+                            Keluarkan ✖
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        function tambahSantriBaru() {
+            const nama = document.getElementById('namaSantriBaru').value.trim();
+            const hari = document.getElementById('hariPiketSantriBaru').value;
+
+            if (!nama) { alert("Masukkan nama santri!"); return; }
+            const listSemua = dapatkanSemuaSantri();
+            if (listSemua.includes(nama)) { alert("Nama santri sudah ada!"); return; }
+
+            if (hari === "Non-Piket") {
+                santriTambahan.push(nama);
+            } else {
+                if (!jadwal[hari]) jadwal[hari] = [];
+                jadwal[hari].push(nama);
+            }
+
+            db[nama] = { ja: 0, so: 0, di: 0, ap: 0, tp: 0, sd: 0, bt: 0 };
+            save();
+            document.getElementById('namaSantriBaru').value = '';
+            renderKelolaSantriList();
+            renderApp();
+            showToast(`Santri baru ${nama} berhasil ditambahkan!`, "🎉");
+        }
+
+        function keluarkanSantri(nama) {
+            const sisa = hitungSisaDendaSantri(nama);
+            if (sisa > 0) {
+                if (!confirm(`Santri ${nama} masih memiliki tunggakan denda Rp${sisa.toLocaleString('id-ID')}. Yakin ingin mengeluarkan?`)) return;
+            } else {
+                if (!confirm(`Keluarkan ${nama} dari daftar santri?`)) return;
+            }
+
+            for (let h in jadwal) {
+                jadwal[h] = jadwal[h].filter(item => item !== nama);
+            }
+            santriTambahan = santriTambahan.filter(item => item !== nama);
+            delete db[nama];
+
+            save();
+            renderKelolaSantriList();
+            renderApp();
+            showToast(`Santri ${nama} telah dikeluarkan.`, "👋");
+        }
+
+        function bagikanLaporan(n) {
+            const totalDenda = hitungTotalDendaSantri(n);
+            const sisa = hitungSisaDendaSantri(n);
+            const bayar = db[n].di || 0;
+            
+            const teksLaporan = `*LAPORAN KEDISIPLINAN SANTRI*\n*PONDOK PESANTREN AL-MU'AWANAH SUKAMANDI*\n\n_Assalamu'alaikum Wr. Wb._\nYth. Bapak/Ibu Wali Santri dari *${n}*,\n\nBerikut rincian laporan kedisiplinan ananda *${n}*:\n\n*1. Pelanggaran Piket Ashar:*\n- Tak Sholat: ${db[n].ja||0}x\n- Tak Sorogan: ${db[n].so||0}x\n\n*2. Pelanggaran Pengajian Isya':*\n- Alpa: ${db[n].ap||0}x | Terlambat: ${db[n].tp||0}x\n\n*3. Ringkasan Keuangan:*\n• Total Denda: *Rp${totalDenda.toLocaleString('id-ID')}*\n• Telah Dibayar: *Rp${bayar.toLocaleString('id-ID')}*\n• *Sisa Denda:* *Rp${sisa.toLocaleString('id-ID')}*\n\n_Wassalamu'alaikum Wr. Wb._`;
+
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(teksLaporan)}`, '_blank');
+        }
+
+        function showToast(message, icon = "✨") {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastIcon').innerText = icon;
+            document.getElementById('toastMessage').innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2500);
+        }
+
+        function showResetModal() {
+            const modal = document.getElementById('confirmModal');
+            modal.classList.remove('pointer-events-none', 'opacity-0');
+            modal.querySelector('div').classList.remove('scale-95');
+        }
+
+        function hideResetModal() {
+            const modal = document.getElementById('confirmModal');
+            modal.classList.add('pointer-events-none', 'opacity-0');
+            modal.querySelector('div').classList.add('scale-95');
+        }
+
+        function executeReset() {
+            localStorage.clear();
+            location.reload();
+        }
+
+        renderApp();
+    </script>
+</body>
+</html>
