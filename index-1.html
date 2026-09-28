@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistem Monitoring & Absensi Santri - Al-Mu'awanah Sukamandi</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{font-family:'Plus Jakarta Sans',sans-serif}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#022c22}
+::-webkit-scrollbar-thumb{background:#059669;border-radius:10px}
+</style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center p-3 sm:p-6 pb-20">
+
+<div class="w-full max-w-md bg-slate-900 rounded-3xl shadow-2xl border border-emerald-950/50 p-5 sm:p-6 mb-6 relative">
+<header class="text-center mb-6 flex flex-col items-center">
+<button onclick="openKelolaSantriModal()" class="absolute top-4 right-4 bg-emerald-950 hover:bg-emerald-900 text-emerald-400 text-[10px] font-bold px-3 py-1.5 rounded-xl border border-emerald-800/40">⚙️ Kelola Santri</button>
+<div id="logoContainer" class="relative w-24 h-24 mb-4 bg-white p-1 rounded-full shadow-lg border-2 border-emerald-500 overflow-hidden flex items-center justify-center">
+<img id="logoPesantren" src="1000302681.png" alt="Logo Al-Mu'awanah" class="object-contain w-full h-full" onerror="handleLogoError()">
+</div>
+<span class="bg-emerald-950/60 text-emerald-400 text-[10px] font-bold tracking-widest uppercase px-3.5 py-1 rounded-full border border-emerald-800/30">PONDOK PESANTREN</span>
+<h1 class="text-lg sm:text-xl font-black tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 mt-2">AL-MU'AWANAH</h1>
+<p class="text-xs text-emerald-400 font-bold tracking-wider">SUKAMANDI</p>
+<p class="text-[10px] text-slate-400 mt-1">Sistem Absensi, Keterlambatan & Denda Santri</p>
+</header>
+
+<div class="grid grid-cols-4 gap-1 bg-slate-950 p-1.5 rounded-2xl mb-6 border border-emerald-950/40">
+<button onclick="switchTab('piket')" id="tab-piket" class="tab-active">Piket</button>
+<button onclick="switchTab('isya')" id="tab-isya" class="tab-normal">Isya'</button>
+<button onclick="switchTab('denda')" id="tab-denda" class="tab-normal relative">Denda<span id="badgeDendaAktif" class="hidden absolute -top-1 -right-1 bg-rose-600 text-white text-[8px] font-black w-4 h-4 rounded-full items-center justify-center border border-slate-900">0</span></button>
+<button onclick="switchTab('rekap')" id="tab-rekap" class="tab-normal">Rekap</button>
+</div>
+
+<div class="bg-slate-950/40 border border-emerald-950/30 rounded-2xl p-3.5 mb-5 space-y-2 text-[11px] text-slate-400">
+<div>🕌 <span class="font-semibold text-slate-300">Ketentuan Roster Piket (Ashar):</span><br>• Tidak Sholat / Tidak Sorogan: <span class="text-rose-400 font-bold">Rp3.000 / pelanggaran</span></div>
+<div class="border-t border-emerald-950/30 pt-2">⚠️ <span class="font-semibold text-slate-300">Ba'da Isya (Kelipatan 5 Pelanggaran):</span><br>• Wajib memilih sanksi: <span class="text-yellow-400 font-semibold">Denda Rp5.000</span> ATAU <span class="text-yellow-400 font-semibold">Hukum Botak 👩‍🦲</span>.</div>
+</div>
+
+<div id="panel-piket" class="space-y-5">
+<div>
+<label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📅 Hari Roster</label>
+<select id="daySelect" onchange="selectedDay=this.value;renderApp()" class="w-full bg-slate-950 border border-emerald-950/60 rounded-2xl p-3.5 text-sm text-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500"></select>
+<p id="tanggalHariIni" class="text-[10px] text-emerald-400 mt-2 font-semibold"></p>
+</div>
+<div class="border-t border-emerald-950/50"></div>
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Daftar Santri Piket Hari Ini</h3>
+<div id="piketListContainer" class="space-y-4"></div>
+</div>
+
+<div id="panel-isya" class="hidden space-y-4">
+<div>
+<label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔍 Cari Nama Santri</label>
+<input type="text" id="searchInput" oninput="renderIsya()" placeholder="Ketik nama santri..." class="w-full bg-slate-950 border border-emerald-950/60 rounded-2xl p-3 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+</div>
+<div class="flex justify-between items-center px-1">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-400">Kehadiran Pengajian Ba'da Isya</span>
+<span id="totalSantriBadge" class="text-[10px] bg-emerald-950 text-emerald-300 px-2.5 py-0.5 rounded-full font-medium">0 Santri</span>
+</div>
+<div id="isyaListContainer" class="space-y-4 max-h-[500px] overflow-y-auto pr-1"></div>
+</div>
+
+<div id="panel-denda" class="hidden space-y-4">
+<div class="flex justify-between items-center">
+<h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Denda & Sanksi Berjalan</h2>
+<span id="totalDendaBerjalanBadge" class="text-[10px] bg-rose-950/80 text-rose-300 px-2.5 py-0.5 rounded-full border border-rose-900/40 font-bold">0 Aktif</span>
+</div>
+<div class="grid grid-cols-2 gap-2 bg-slate-950 p-1 rounded-xl border border-emerald-950/40 text-xs font-bold">
+<button onclick="switchSubDenda('uang')" id="subtab-uang" class="py-2 rounded-lg bg-emerald-600 text-white">💵 Denda Uang</button>
+<button onclick="switchSubDenda('botak')" id="subtab-botak" class="py-2 rounded-lg text-slate-400">👩‍🦲 Sanksi Botak</button>
+</div>
+<div id="panel-denda-uang" class="space-y-3 max-h-[430px] overflow-y-auto pr-1"></div>
+<div id="panel-denda-botak" class="hidden space-y-3 max-h-[430px] overflow-y-auto pr-1"></div>
+</div>
+
+<div id="panel-rekap" class="hidden space-y-4">
+<div class="flex justify-between items-center">
+<div><h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Rincian & Pembayaran</h2><span class="text-[9px] text-slate-500">Laporan resmi kedisiplinan dan administrasi</span></div>
+<span class="text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded-md font-semibold">Live Update</span>
+</div>
+<div id="summaryContainer" class="space-y-3 max-h-[420px] overflow-y-auto pr-1"></div>
+<div class="bg-slate-950 p-4 rounded-2xl border border-emerald-950/60 space-y-2.5">
+<h4 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Statistik Akumulasi</h4>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-slate-900/50 p-2.5 rounded-xl border border-emerald-950/30"><span class="block text-[9px] text-slate-400">Total Denda</span><span id="statTotalDenda" class="text-sm font-bold text-rose-400">Rp0</span></div>
+<div class="bg-slate-900/50 p-2.5 rounded-xl border border-emerald-950/30"><span class="block text-[9px] text-slate-400">Total Dibayar</span><span id="statTotalBayar" class="text-sm font-bold text-emerald-400">Rp0</span></div>
+</div>
+</div>
+<button onclick="showResetModal()" class="w-full text-[10px] text-red-400/80 hover:text-red-400 py-2 border border-dashed border-red-950/45 rounded-xl">⚠️ Reset Semua Data Aplikasi</button>
+</div>
+</div>
+
+<div id="kelolaSantriModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all z-50">
+<div class="bg-slate-950 border border-emerald-900/40 w-full max-w-sm rounded-3xl p-5 space-y-4 max-h-[90vh] flex flex-col">
+<div class="flex justify-between items-center border-b border-emerald-950/60 pb-3"><h3 class="text-sm font-bold">⚙️ Manajemen Santri</h3><button onclick="closeKelolaSantriModal()" class="text-slate-400 text-lg">✕</button></div>
+<div class="bg-slate-900 p-3 rounded-2xl border border-emerald-950/30 space-y-2.5">
+<span class="block text-[10px] font-bold text-emerald-400 uppercase">➕ Tambah Santri Baru</span>
+<input type="text" id="namaSantriBaru" placeholder="Nama lengkap santri..." class="w-full bg-slate-950 border border-emerald-950/60 rounded-xl p-2.5 text-xs">
+<div class="flex gap-2">
+<select id="hariPiketSantriBaru" class="w-full bg-slate-950 border border-emerald-950/60 rounded-xl p-2 text-xs">
+<option value="Non-Piket">Non-Piket (Hanya Isya)</option><option value="Sabtu">Piket Sabtu</option><option value="Minggu">Piket Minggu</option><option value="Senin">Piket Senin</option><option value="Selasa">Piket Selasa</option><option value="Rabu">Piket Rabu</option><option value="Kamis">Piket Kamis</option>
+</select>
+<button onclick="tambahSantriBaru()" class="bg-emerald-600 text-white text-xs font-bold px-3 py-2 rounded-xl">Simpan</button>
+</div>
+</div>
+<div class="flex-1 overflow-hidden flex flex-col">
+<span class="block text-[10px] font-bold text-slate-400 uppercase mb-2">📋 Daftar Santri</span>
+<div id="listKelolaSantriContainer" class="space-y-2 overflow-y-auto pr-1 flex-1"></div>
+</div>
+</div>
+</div>
+
+<div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-800 text-slate-100 text-xs font-semibold px-4 py-3 rounded-2xl shadow-xl border border-emerald-950/60 flex items-center gap-2 translate-y-20 opacity-0 transition-all pointer-events-none z-50 w-[90%] max-w-xs text-center justify-center"><span id="toastIcon">✨</span><span id="toastMessage">Perubahan disimpan!</span></div>
+
+<div id="confirmModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none z-50">
+<div class="bg-slate-950 border border-red-900/30 w-full max-w-xs rounded-3xl p-6 text-center">
+<div class="w-12 h-12 bg-red-900/30 border border-red-800 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">⚠️</div>
+<h3 class="text-base font-bold mb-2">Reset Data Aplikasi?</h3>
+<p class="text-xs text-slate-400 mb-6">Data aplikasi akan dihapus. Data browser aplikasi lain tidak ikut terhapus.</p>
+<div class="grid grid-cols-2 gap-2"><button onclick="hideResetModal()" class="bg-slate-800 text-slate-300 font-semibold text-xs py-2.5 rounded-xl">Batal</button><button onclick="executeReset()" class="bg-red-600 text-white font-semibold text-xs py-2.5 rounded-xl">Ya, Reset</button></div>
+</div>
+</div>
+
+<script>
+/* =========================================================
+   DATA BAWAAN — DIPERTAHANKAN DARI KODE ANDA
+========================================================= */
+const jadwalBawaan={
+"Sabtu":["Sabil","Fatir","Hafid"],
+"Minggu":["Ale","Noval","Alif"],
+"Senin":["Ihab","Aswad","Adit"],
+"Selasa":["Rehan","Tohir"],
+"Rabu":["Maman","Samsul"],
+"Kamis":["Ikrom","Trisno","Aris"]
+};
+const santriTambahanBawaan=["Bagio","Syarif"];
+const TARIF={piket:3000,sanksiDenda:5000};
+const HARI=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+const STORAGE_KEY="almua_monitoring_v3";
+
+let activeTab="piket";
+let subTabDenda="uang";
+let selectedDay="";
+
+/* =========================================================
+   DATABASE BARU
+========================================================= */
+const defaultDB={
+santri:{},
+piket:{},
+isya:{},
+denda:[],
+sanksi:[],
+createdAt:new Date().toISOString()
+};
+
+let state=loadState();
+
+function clone(o){return JSON.parse(JSON.stringify(o));}
+
+function loadState(){
+try{
+const old=JSON.parse(localStorage.getItem(STORAGE_KEY));
+if(old && old.santri && old.piket && old.isya && old.denda && old.sanksi) return old;
+}catch(e){}
+return migrateOldData();
+}
+
+function migrateOldData(){
+const s=clone(defaultDB);
+Object.entries(jadwalBawaan).forEach(([hari,namaList])=>{
+namaList.forEach(n=>{
+s.santri[n]={nama:n,hari,aktif:true,asal:"bawaan"};
+});
+});
+santriTambahanBawaan.forEach(n=>{
+s.santri[n]={nama:n,hari:"Non-Piket",aktif:true,asal:"bawaan"};
+});
+
+/* Migrasi data lama denda_app bila memang ada */
+try{
+const oldDb=JSON.parse(localStorage.getItem("denda_app")||"{}");
+Object.entries(oldDb).forEach(([n,v])=>{
+if(!s.santri[n]) s.santri[n]={nama:n,hari:"Non-Piket",aktif:true,asal:"data-lama"};
+if(v.ja||v.so) s.piket.__legacy=s.piket.__legacy||{};
+if(v.ap||v.tp) s.isya.__legacy=s.isya.__legacy||{};
+});
+}catch(e){}
+
+saveState(s);
+return s;
+}
+
+function saveState(obj=state){
+localStorage.setItem(STORAGE_KEY,JSON.stringify(obj));
+}
+
+function esc(v){
+return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+
+function todayKey(){
+const d=new Date();
+return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+
+function todayName(){return HARI[new Date().getDay()];}
+
+function formatTanggal(key){
+if(!key)return"-";
+const [y,m,d]=key.split("-");
+return `${d}-${m}-${y}`;
+}
+
+function rupiah(n){return "Rp"+Number(n||0).toLocaleString("id-ID");}
+
+function semuaSantri(aktifOnly=false){
+return Object.values(state.santri)
+.filter(s=>!aktifOnly||s.aktif)
+.sort((a,b)=>a.nama.localeCompare(b.nama,"id"))
+.map(s=>s.nama);
+}
+
+function getSantri(n){return state.santri[n];}
+
+function ensureDayData(){
+const t=todayKey();
+if(!state.piket[t])state.piket[t]={};
+if(!state.isya[t])state.isya[t]={};
+}
+
+function handleLogoError(){
+const c=document.getElementById("logoContainer");
+if(c)c.innerHTML='<div class="w-full h-full bg-emerald-50 flex flex-col items-center justify-center text-emerald-800 font-bold p-1 text-center"><span class="text-[32px]">🕌</span><span class="text-[9px]">AL-MU&#039;AWANAH</span></div>';
+}
+
+/* =========================================================
+   HARI OTOMATIS
+========================================================= */
+function setHariOtomatis(){
+const select=document.getElementById("daySelect");
+if(!select)return;
+const hari=todayName();
+if(!selectedDay || selectedDay!==hari) selectedDay=hari;
+select.value=hari;
+document.getElementById("tanggalHariIni").textContent=
+`Hari ini: ${hari}, ${formatTanggal(todayKey())}`+
+(hari==="Jumat"?" — tidak ada roster bawaan":"");
+}
+
+/* =========================================================
+   PIKET
+========================================================= */
+function getPiketRecord(t,n){
+return state.piket[t]?.[n]||{sholat:0,sorogan:0};
+}
+
+function updatePiket(n,jenis,delta){
+const t=todayKey();
+ensureDayData();
+if(!state.piket[t][n])state.piket[t][n]={sholat:0,sorogan:0};
+const r=state.piket[t][n];
+r[jenis]=Math.max(0,(r[jenis]||0)+delta);
+r.updatedAt=new Date().toISOString();
+
+syncAutomaticDenda(n,t);
+saveState();
+renderApp();
+showToast(`${n}: data ${jenis==="sholat"?"sholat":"sorogan"} diperbarui`,"💾");
+}
+
+function syncAutomaticDenda(n,t){
+const r=getPiketRecord(t,n);
+["sholat","sorogan"].forEach(jenis=>{
+const source=`piket|${t}|${n}|${jenis}`;
+const existing=state.denda.find(x=>x.source===source);
+const jumlah=r[jenis]||0;
+if(jumlah>0 && !existing){
+state.denda.push({
+id:crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random(),
+nama:n,tanggal:t,jenis:`Piket - ${jenis==="sholat"?"Tidak Sholat":"Tidak Sorogan"}`,
+nominal:jumlah*TARIF.piket,dibayar:0,source,aktif:true,createdAt:new Date().toISOString()
+});
+}else if(existing){
+existing.nominal=jumlah*TARIF.piket;
+existing.aktif=existing.dibayar<existing.nominal;
+}
+});
+}
+
+function renderPiket(){
+setHariOtomatis();
+const day=document.getElementById("daySelect").value;
+const c=document.getElementById("piketListContainer");
+c.innerHTML="";
+if(day==="Jumat"){
+c.innerHTML='<div class="text-center py-8 text-slate-500 text-xs bg-slate-950/40 rounded-2xl">📅 Jumat tidak memiliki roster piket bawaan.</div>';
+return;
+}
+const daftar=Object.values(state.santri).filter(s=>s.aktif&&s.hari===day).sort((a,b)=>a.nama.localeCompare(b.nama,"id"));
+if(!daftar.length){
+c.innerHTML='<div class="text-center py-8 text-slate-500 text-xs bg-slate-950/40 rounded-2xl">Tidak ada santri piket pada hari ini.</div>';
+return;
+}
+const t=todayKey();
+daftar.forEach(s=>{
+const r=getPiketRecord(t,s.nama);
+const total=(r.sholat+r.sorogan)*TARIF.piket;
+const dibayar=state.denda.filter(x=>x.nama===s.nama&&x.aktif).reduce((a,x)=>a+Math.max(0,x.dibayar||0),0);
+c.innerHTML+=`
+<div class="bg-slate-950/70 p-4 rounded-2xl border border-emerald-950/30">
+<div class="flex justify-between items-center mb-3">
+<span class="font-extrabold text-slate-200 text-sm">${esc(s.nama)}</span>
+<span class="${total>0?"text-rose-400 bg-rose-950/30":"text-emerald-400 bg-emerald-950/30"} text-xs font-bold px-2.5 py-1 rounded-full">Hari ini: ${rupiah(total)}</span>
+</div>
+<div class="grid grid-cols-2 gap-2 mb-3 text-[10px] font-semibold">
+<button onclick="updatePiket('${esc(s.nama)}','sholat',1)" class="bg-slate-900 border border-emerald-950/30 py-2.5 px-2 rounded-xl flex justify-between">Tak Sholat <b class="text-rose-300">${r.sholat||0}x</b></button>
+<button onclick="updatePiket('${esc(s.nama)}','sorogan',1)" class="bg-slate-900 border border-emerald-950/30 py-2.5 px-2 rounded-xl flex justify-between">Tak Sorogan <b class="text-rose-300">${r.sorogan||0}x</b></button>
+</div>
+<div class="flex justify-end gap-3 text-[9px] text-slate-500 mb-3">
+<button onclick="updatePiket('${esc(s.nama)}','sholat',-1)">− Koreksi Sholat</button>
+<button onclick="updatePiket('${esc(s.nama)}','sorogan',-1)">− Koreksi Sorogan</button>
+</div>
+<div class="text-[9px] text-slate-500">Denda otomatis: ${rupiah(total)} ${dibayar?"| Pembayaran tercatat: "+rupiah(dibayar):""}</div>
+</div>`;
+});
+}
+
+/* =========================================================
+   ISYA
+========================================================= */
+function getIsyaRecord(t,n){return state.isya[t]?.[n]||{alpa:0,terlambat:0};}
+
+function updateIsya(n,jenis,delta){
+const t=todayKey();
+ensureDayData();
+if(!state.isya[t][n])state.isya[t][n]={alpa:0,terlambat:0};
+state.isya[t][n][jenis]=Math.max(0,(state.isya[t][n][jenis]||0)+delta);
+state.isya[t][n].updatedAt=new Date().toISOString();
+syncIsyaSanction(n);
+saveState();
+renderIsya();
+renderDenda();
+updateBadge();
+showToast(`Absensi Isya ${n} diperbarui`,"📝");
+}
+
+function totalIsya(n){
+let total=0;
+Object.values(state.isya).forEach(day=>{
+const r=day[n];
+if(r)total+=(r.alpa||0)+(r.terlambat||0);
+});
+return total;
+}
+
+function milestoneTerpenuhi(n){return Math.floor(totalIsya(n)/5);}
+
+function syncIsyaSanction(n){
+const target=milestoneTerpenuhi(n);
+for(let i=1;i<=target;i++){
+const source=`isya|${n}|milestone|${i}`;
+if(!state.sanksi.some(x=>x.source===source)){
+state.sanksi.push({
+id:crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random(),
+nama:n,milestone:i,source,status:"pending",pilihan:null,tanggal:new Date().toISOString(),aktif:true
+});
+}
+}
+}
+
+function renderIsya(){
+const search=(document.getElementById("searchInput").value||"").toLowerCase();
+const c=document.getElementById("isyaListContainer");
+c.innerHTML="";
+const list=semuaSantri(true).filter(n=>!search||n.toLowerCase().includes(search));
+document.getElementById("totalSantriBadge").textContent=`${list.length} Santri`;
+if(!list.length){c.innerHTML='<div class="text-center py-8 text-slate-500 text-xs">Santri tidak ditemukan.</div>';return;}
+list.forEach(n=>{
+syncIsyaSanction(n);
+const r=getIsyaRecord(todayKey(),n);
+const total=totalIsya(n);
+const pending=state.sanksi.filter(x=>x.nama===n&&x.status==="pending"&&x.aktif);
+c.innerHTML+=`
+<div class="bg-slate-950/60 p-3.5 rounded-2xl border ${pending.length?"border-red-900/40":"border-emerald-900/10"}">
+<div class="flex justify-between items-start">
+<div><span class="font-bold text-slate-100 text-xs">${esc(n)}</span>
+<span class="block text-[9px] text-slate-400 mt-1">Total pelanggaran Isya: <b class="text-emerald-400">${total}x</b></span></div>
+<div class="text-[9px] text-right"><span class="text-rose-300">Alpa ${r.alpa||0}x</span><br><span class="text-amber-300">Terlambat ${r.terlambat||0}x</span></div>
+</div>
+<div class="grid grid-cols-2 gap-2 mt-3 text-[10px]">
+<div class="flex justify-between items-center bg-slate-900 rounded-xl overflow-hidden"><span class="pl-2 text-rose-300">Alpa</span><span><button onclick="updateIsya('${esc(n)}','alpa',-1)" class="px-2 py-1.5">−</button><button onclick="updateIsya('${esc(n)}','alpa',1)" class="px-3 py-1.5 bg-rose-900/40">+</button></span></div>
+<div class="flex justify-between items-center bg-slate-900 rounded-xl overflow-hidden"><span class="pl-2 text-amber-300">Terlambat</span><span><button onclick="updateIsya('${esc(n)}','terlambat',-1)" class="px-2 py-1.5">−</button><button onclick="updateIsya('${esc(n)}','terlambat',1)" class="px-3 py-1.5 bg-amber-900/40">+</button></span></div>
+</div>
+${pending.length?`<div class="mt-3 bg-red-950/35 border border-red-900/45 rounded-xl p-2.5 text-center"><span class="block text-[10px] font-bold text-red-300 mb-2">🚨 ${pending.length} Sanksi Belum Dipilih</span><div class="space-y-1.5">${pending.map(x=>`<div class="grid grid-cols-2 gap-1.5"><button onclick="pilihSanksi('${x.id}','denda')" class="bg-red-900 text-white text-[9px] font-bold py-1.5 rounded-lg">Denda Rp5.000</button><button onclick="pilihSanksi('${x.id}','botak')" class="bg-amber-500 text-slate-950 text-[9px] font-black py-1.5 rounded-lg">Hukum Botak 👩‍🦲</button></div>`).join("")}</div></div>`:""}
+</div>`;
+});
+}
+
+function pilihSanksi(id,tipe){
+const x=state.sanksi.find(a=>a.id===id);
+if(!x||x.status!=="pending")return;
+x.pilihan=tipe;x.status="aktif";
+if(tipe==="denda"){
+state.denda.push({
+id:crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random(),
+nama:x.nama,tanggal:todayKey(),jenis:`Sanksi Isya kelipatan ${x.milestone*5}`,
+nominal:TARIF.sanksiDenda,dibayar:0,source:x.source,aktif:true,createdAt:new Date().toISOString()
+});
+}else{
+/* Sanksi botak tetap tercatat sebagai sanksi, tidak dihapus saat selesai */
+}
+saveState();renderIsya();renderDenda();updateBadge();
+showToast(tipe==="denda"?`${x.nama}: denda Rp5.000 dibuat`:`${x.nama}: sanksi botak dicatat`,"⚠️");
+}
+
+/* =========================================================
+   DENDA
+========================================================= */
+function semuaDendaAktif(){
+return state.denda.filter(x=>x.aktif&&((x.nominal||0)-(x.dibayar||0)>0));
+}
+
+function bayarDenda(id,inputId){
+const x=state.denda.find(a=>a.id===id);
+const input=document.getElementById(inputId);
+const val=Number(input?.value||0);
+if(!x||!val||val<=0)return;
+const sisa=Math.max(0,x.nominal-(x.dibayar||0));
+x.dibayar=Math.min(x.nominal,(x.dibayar||0)+val);
+x.aktif=x.dibayar<x.nominal;
+saveState();renderApp();
+showToast(`Pembayaran ${rupiah(Math.min(val,sisa))} disimpan`,"💵");
+}
+
+function selesaikanBotak(id){
+const x=state.sanksi.find(a=>a.id===id);
+if(!x)return;
+x.status="selesai";x.selesaiTanggal=todayKey();x.aktif=false;
+saveState();renderDenda();renderIsya();updateBadge();
+showToast(`${x.nama}: sanksi botak selesai`,"✂️");
+}
+
+function renderDenda(){
+const uang=document.getElementById("panel-denda-uang");
+const botak=document.getElementById("panel-denda-botak");
+uang.innerHTML="";botak.innerHTML="";
+const list=semuaDendaAktif();
+if(!list.length)uang.innerHTML='<div class="text-center py-8 text-slate-500 text-xs">🎉 Tidak ada denda uang yang berjalan.</div>';
+list.forEach((x,i)=>{
+const sisa=x.nominal-(x.dibayar||0);
+const iid=`bayar_${i}`;
+uang.innerHTML+=`<div class="bg-slate-950/80 p-3.5 rounded-2xl border border-rose-900/30 text-xs">
+<div class="flex justify-between gap-2"><span class="font-bold text-slate-200">${esc(x.nama)}</span><span class="text-rose-400 font-extrabold">${rupiah(sisa)}</span></div>
+<div class="text-[10px] text-slate-400 bg-slate-900/60 p-2 rounded-xl mt-2">📅 ${formatTanggal(x.tanggal)}<br>📌 ${esc(x.jenis)}<br>💰 Total ${rupiah(x.nominal)} • Dibayar ${rupiah(x.dibayar||0)}</div>
+<div class="flex gap-2 mt-2"><input id="${iid}" type="number" min="1" max="${sisa}" placeholder="Bayar Rp..." class="w-full bg-slate-900 border border-emerald-950/50 rounded-xl px-2.5 py-1.5 text-xs"><button onclick="bayarDenda('${x.id}','${iid}')" class="bg-emerald-600 text-white font-bold px-3 rounded-xl text-xs">Bayar</button></div>
+</div>`;
+});
+const botakList=state.sanksi.filter(x=>x.pilihan==="botak"&&x.status==="aktif");
+if(!botakList.length)botak.innerHTML='<div class="text-center py-8 text-slate-500 text-xs">✨ Tidak ada sanksi botak aktif.</div>';
+botakList.forEach(x=>{
+botak.innerHTML+=`<div class="bg-slate-950/80 p-3.5 rounded-2xl border border-amber-900/30 flex justify-between items-center"><div><b class="text-xs">${esc(x.nama)}</b><span class="block text-[10px] text-amber-400">👩‍🦲 Kelipatan ${x.milestone*5} pelanggaran Isya</span></div><button onclick="selesaikanBotak('${x.id}')" class="bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-[10px]">Selesai ✓</button></div>`;
+});
+const aktif=list.length+botakList.length;
+document.getElementById("totalDendaBerjalanBadge").textContent=`${aktif} Aktif`;
+}
+
+function updateBadge(){
+const n=semuaDendaAktif().length+state.sanksi.filter(x=>x.pilihan==="botak"&&x.status==="aktif").length+state.sanksi.filter(x=>x.status==="pending"&&x.aktif).length;
+const b=document.getElementById("badgeDendaAktif");
+b.textContent=n;b.classList.toggle("hidden",n===0);b.classList.toggle("flex",n>0);
+}
+
+/* =========================================================
+   REKAP
+========================================================= */
+function rekapSantri(n){
+let totalPiket=0,totalIsya=0;
+Object.values(state.piket).forEach(day=>{const r=day[n];if(r)totalPiket+=(r.sholat+r.sorogan);});
+Object.values(state.isya).forEach(day=>{const r=day[n];if(r)totalIsya+=(r.alpa+r.terlambat);});
+const denda=state.denda.filter(x=>x.nama===n);
+const total=denda.reduce((a,x)=>a+(x.nominal||0),0);
+const bayar=denda.reduce((a,x)=>a+(x.dibayar||0),0);
+const botak=state.sanksi.filter(x=>x.nama===n&&x.pilihan==="botak").length;
+return {totalPiket,totalIsya,total,bayar,sisa:Math.max(0,total-bayar),botak};
+}
+
+function renderRekap(){
+const c=document.getElementById("summaryContainer");c.innerHTML="";
+let total=0,bayar=0;
+semuaSantri(true).forEach(n=>{
+const r=rekapSantri(n);total+=r.total;bayar+=r.bayar;
+if(r.total||r.bayar||r.botak||r.totalPiket||r.totalIsya){
+c.innerHTML+=`<div class="bg-slate-950/70 p-3.5 rounded-2xl border border-emerald-950/40 text-xs">
+<div class="flex justify-between"><b>${esc(n)}</b><span class="${r.sisa?"text-rose-400":"text-emerald-400"}">Sisa ${rupiah(r.sisa)}</span></div>
+<div class="grid grid-cols-2 gap-1 text-[9px] text-slate-400 mt-2">
+<span>Piket: ${r.totalPiket} pelanggaran</span><span>Isya: ${r.totalIsya} pelanggaran</span><span>Total denda: ${rupiah(r.total)}</span><span>Dibayar: ${rupiah(r.bayar)}</span><span>Botak: ${r.botak}x</span>
+</div>
+<button onclick="bagikanLaporan('${esc(n)}')" class="w-full mt-3 bg-emerald-600 text-white text-[10px] font-bold py-2 rounded-xl">💬 Kirim Rekap ${esc(n)} ke WhatsApp</button>
+</div>`;
+}
+});
+if(!c.innerHTML)c.innerHTML='<div class="text-center py-8 text-slate-500 text-xs">Belum ada riwayat pelanggaran/denda.</div>';
+document.getElementById("statTotalDenda").textContent=rupiah(total);
+document.getElementById("statTotalBayar").textContent=rupiah(bayar);
+}
+
+function bagikanLaporan(n){
+const r=rekapSantri(n);
+const teks=`*LAPORAN KEDISIPLINAN SANTRI*
+*PONDOK PESANTREN AL-MU'AWANAH SUKAMANDI*
+
+_Assalamu'alaikum Wr. Wb._
+
+Yth. Bapak/Ibu Wali Santri dari *${n}*,
+
+Berikut rekap kedisiplinan ananda:
+
+*Piket Ashar*
+• Pelanggaran: ${r.totalPiket}x
+• Denda: ${rupiah(r.totalPiket*TARIF.piket)}
+
+*Pengajian Ba'da Isya'*
+• Pelanggaran: ${r.totalIsya}x
+
+*Administrasi*
+• Total denda: *${rupiah(r.total)}*
+• Telah dibayar: *${rupiah(r.bayar)}*
+• Sisa denda: *${rupiah(r.sisa)}*
+• Sanksi botak: ${r.botak}x
+
+_Wassalamu'alaikum Wr. Wb._`;
+window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(teks)}`,"_blank");
+}
+
+/* =========================================================
+   KELOLA SANTRI — TIDAK MENGHAPUS RIWAYAT
+========================================================= */
+function openKelolaSantriModal(){
+renderKelolaSantriList();
+const m=document.getElementById("kelolaSantriModal");
+m.classList.remove("pointer-events-none","opacity-0");
+}
+function closeKelolaSantriModal(){
+const m=document.getElementById("kelolaSantriModal");
+m.classList.add("pointer-events-none","opacity-0");
+}
+
+function renderKelolaSantriList(){
+const c=document.getElementById("listKelolaSantriContainer");c.innerHTML="";
+Object.values(state.santri).sort((a,b)=>a.nama.localeCompare(b.nama,"id")).forEach(s=>{
+c.innerHTML+=`<div class="bg-slate-900 p-2.5 rounded-xl border border-emerald-950/30 flex justify-between items-center text-xs ${s.aktif?"":"opacity-60"}">
+<div><b class="block">${esc(s.nama)}</b><span class="text-[9px] ${s.aktif?"text-emerald-400":"text-slate-500"}">${esc(s.hari)} • ${s.aktif?"Aktif":"Tidak aktif"}</span></div>
+<button onclick="toggleSantri('${esc(s.nama)}')" class="${s.aktif?"bg-rose-950/60 text-rose-300":"bg-emerald-950 text-emerald-300"} border border-emerald-900/50 text-[10px] px-2.5 py-1 rounded-lg">${s.aktif?"Keluarkan":"Aktifkan"}</button>
+</div>`;
+});
+}
+
+function tambahSantriBaru(){
+const input=document.getElementById("namaSantriBaru");
+const nama=input.value.trim();
+const hari=document.getElementById("hariPiketSantriBaru").value;
+if(!nama)return alert("Masukkan nama santri!");
+if(state.santri[nama])return alert("Nama santri sudah ada!");
+state.santri[nama]={nama,hari,aktif:true,asal:"tambahan"};
+saveState();input.value="";renderKelolaSantriList();renderApp();
+showToast(`${nama} berhasil ditambahkan`,"🎉");
+}
+
+function toggleSantri(n){
+if(!state.santri[n])return;
+state.santri[n].aktif=!state.santri[n].aktif;
+saveState();renderKelolaSantriList();renderApp();
+showToast(`${n}: ${state.santri[n].aktif?"diaktifkan":"dinonaktifkan"}`,"🔄");
+}
+
+/* =========================================================
+   UI
+========================================================= */
+function switchTab(tab){
+activeTab=tab;
+["piket","isya","denda","rekap"].forEach(t=>{
+const b=document.getElementById("tab-"+t),p=document.getElementById("panel-"+t);
+if(t===tab){b.className="tab-active";p.classList.remove("hidden");}
+else{b.className="tab-normal";p.classList.add("hidden");}
+});
+renderApp();
+}
+
+function switchSubDenda(sub){
+subTabDenda=sub;
+document.getElementById("panel-denda-uang").classList.toggle("hidden",sub!=="uang");
+document.getElementById("panel-denda-botak").classList.toggle("hidden",sub!=="botak");
+document.getElementById("subtab-uang").className=sub==="uang"?"py-2 rounded-lg bg-emerald-600 text-white":"py-2 rounded-lg text-slate-400";
+document.getElementById("subtab-botak").className=sub==="botak"?"py-2 rounded-lg bg-amber-600 text-slate-950":"py-2 rounded-lg text-slate-400";
+}
+
+function renderApp(){
+ensureDayData();
+renderPiket();
+renderIsya();
+renderDenda();
+renderRekap();
+updateBadge();
+switchSubDenda(subTabDenda);
+}
+
+function showToast(msg,icon="✨"){
+const t=document.getElementById("toast");
+document.getElementById("toastIcon").textContent=icon;
+document.getElementById("toastMessage").textContent=msg;
+t.classList.remove("translate-y-20","opacity-0");t.classList.add("translate-y-0","opacity-100");
+clearTimeout(window.__toastTimer);
+window.__toastTimer=setTimeout(()=>{t.classList.add("translate-y-20","opacity-0");t.classList.remove("translate-y-0","opacity-100")},2300);
+}
+
+function showResetModal(){document.getElementById("confirmModal").classList.remove("pointer-events-none","opacity-0")}
+function hideResetModal(){document.getElementById("confirmModal").classList.add("pointer-events-none","opacity-0")}
+function executeReset(){localStorage.removeItem(STORAGE_KEY);location.reload()}
+
+const style=document.createElement("style");
+style.textContent=`
+.tab-active{font-size:11px;font-weight:700;padding:.625rem;border-radius:.75rem;background:#059669;color:white;box-shadow:0 10px 20px rgba(2,44,34,.5);text-align:center}
+.tab-normal{font-size:11px;font-weight:700;padding:.625rem;border-radius:.75rem;color:#94a3b8;text-align:center}
+.tab-normal:hover{color:#6ee7b7}
+`;
+document.head.appendChild(style);
+
+/* Inisialisasi */
+(function init(){
+const sel=document.getElementById("daySelect");
+["Sabtu","Minggu","Senin","Selasa","Rabu","Kamis","Jumat"].forEach(h=>{
+const o=document.createElement("option");o.value=h;o.textContent=h;sel.appendChild(o);
+});
+setHariOtomatis();
+renderApp();
+/* Memeriksa pergantian hari otomatis */
+let last=todayKey();
+setInterval(()=>{
+const now=todayKey();
+if(now!==last){last=now;selectedDay="";renderApp();showToast("Hari berganti. Piket otomatis mengikuti hari baru.","📅");}
+},30000);
+})();
+</script>
+</body>
+</html>
