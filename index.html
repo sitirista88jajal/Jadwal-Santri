@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Monitoring Santri Al-Mu'awanah</title>
+<title>Monitoring Santri Al-Mu'awanah Sukamandi</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -30,7 +30,8 @@
         box-shadow: 0 2px 8px rgba(0,0,0,.08);
     }
 
-    input, select {
+    input,
+    select {
         border: 1px solid #d1d5db;
         border-radius: 10px;
         padding: 9px;
@@ -38,7 +39,8 @@
         outline: none;
     }
 
-    input:focus, select:focus {
+    input:focus,
+    select:focus {
         border-color: #16a34a;
         box-shadow: 0 0 0 2px rgba(22,163,74,.15);
     }
@@ -59,6 +61,7 @@
 <!-- HEADER -->
 <header class="bg-green-700 text-white p-4 shadow">
     <div class="max-w-4xl mx-auto">
+
         <h1 class="text-xl font-bold">
             Sistem Monitoring & Absensi Santri
         </h1>
@@ -66,42 +69,67 @@
         <p class="text-sm opacity-90">
             Al-Mu'awanah Sukamandi
         </p>
+
     </div>
 </header>
 
 
-<!-- NAV -->
+<!-- NAVIGASI -->
 <div class="bg-white shadow sticky top-0 z-20">
+
     <div class="max-w-4xl mx-auto grid grid-cols-4">
 
-        <button onclick="bukaTab('piket')" id="tabPiket"
+        <button
+            onclick="bukaTab('piket')"
+            id="tabPiket"
             class="p-3 text-sm font-bold tab-active">
+
             🕌 Piket
+
         </button>
 
-        <button onclick="bukaTab('isya')" id="tabIsya"
+
+        <button
+            onclick="bukaTab('isya')"
+            id="tabIsya"
             class="p-3 text-sm font-bold">
+
             🌙 Isya'
+
         </button>
 
-        <button onclick="bukaTab('denda')" id="tabDenda"
+
+        <button
+            onclick="bukaTab('denda')"
+            id="tabDenda"
             class="p-3 text-sm font-bold">
+
             💰 Denda
+
         </button>
 
-        <button onclick="bukaTab('rekap')" id="tabRekap"
+
+        <button
+            onclick="bukaTab('rekap')"
+            id="tabRekap"
             class="p-3 text-sm font-bold">
+
             📊 Rekap
+
         </button>
 
     </div>
+
 </div>
 
 
 <main class="max-w-4xl mx-auto p-3 pb-20">
 
 
-<!-- ================= PIKET ================= -->
+<!-- =====================================================
+     MENU PIKET
+===================================================== -->
+
 <section id="piket" class="tab-content">
 
     <div class="card mb-3">
@@ -109,6 +137,7 @@
         <div class="flex justify-between items-center mb-2">
 
             <div>
+
                 <h2 class="font-bold text-lg">
                     🕌 Piket Ashar
                 </h2>
@@ -116,11 +145,16 @@
                 <p class="text-xs text-gray-500">
                     Tidak Sholat / Tidak Sorogan = Rp3.000
                 </p>
+
             </div>
 
-            <span id="badgeHariIni"
+
+            <span
+                id="badgeHariIni"
                 class="bg-green-100 text-green-700 px-2 py-1 rounded-lg text-xs font-bold">
+
                 HARI INI
+
             </span>
 
         </div>
@@ -130,20 +164,44 @@
             Pilih Hari
         </label>
 
-        <select id="hariSelect"
-                onchange="renderPiket()"
-                class="mt-1 mb-3">
-            <option value="Sabtu">Sabtu</option>
-            <option value="Minggu">Minggu</option>
-            <option value="Senin">Senin</option>
-            <option value="Selasa">Selasa</option>
-            <option value="Rabu">Rabu</option>
-            <option value="Kamis">Kamis</option>
+
+        <select
+            id="hariSelect"
+            onchange="renderPiket()"
+            class="mt-1 mb-3">
+
+            <option value="Sabtu">
+                Sabtu
+            </option>
+
+            <option value="Minggu">
+                Minggu
+            </option>
+
+            <option value="Senin">
+                Senin
+            </option>
+
+            <option value="Selasa">
+                Selasa
+            </option>
+
+            <option value="Rabu">
+                Rabu
+            </option>
+
+            <option value="Kamis">
+                Kamis
+            </option>
+
         </select>
 
-        <div id="infoHari"
-             class="text-sm text-green-700 font-bold mb-2">
+
+        <div
+            id="infoHari"
+            class="text-sm text-green-700 font-bold mb-2">
         </div>
+
 
         <div id="listPiket"></div>
 
@@ -158,7 +216,7 @@
         </h3>
 
         <p class="text-xs text-gray-500 mb-3">
-            Santri berikut tidak mendapatkan tugas piket.
+            Santri yang tidak mempunyai jadwal piket.
         </p>
 
         <div id="listNonPiket"></div>
@@ -168,8 +226,12 @@
 </section>
 
 
-<!-- ================= ISYA ================= -->
-<section id="isya"
+<!-- =====================================================
+     MENU ISYA
+===================================================== -->
+
+<section
+    id="isya"
     class="tab-content hidden">
 
     <div class="card">
@@ -179,8 +241,9 @@
         </h2>
 
         <p class="text-xs text-gray-500 mb-3">
-            Alpa / Terlambat dihitung untuk sanksi setiap 5 pelanggaran.
+            Setiap 5 pelanggaran mendapatkan 1 sanksi.
         </p>
+
 
         <div id="listIsya"></div>
 
@@ -189,25 +252,24 @@
 </section>
 
 
-<!-- ================= DENDA ================= -->
-<section id="denda"
+<!-- =====================================================
+     MENU DENDA
+===================================================== -->
+
+<section
+    id="denda"
     class="tab-content hidden">
 
     <div class="card">
 
-        <div class="flex justify-between items-center mb-3">
+        <h2 class="font-bold text-lg mb-1">
+            💰 Rekap Denda
+        </h2>
 
-            <div>
-                <h2 class="font-bold text-lg">
-                    💰 Rekap Denda
-                </h2>
+        <p class="text-xs text-gray-500 mb-3">
+            Denda otomatis berdasarkan pelanggaran.
+        </p>
 
-                <p class="text-xs text-gray-500">
-                    Denda otomatis dihitung dari pelanggaran.
-                </p>
-            </div>
-
-        </div>
 
         <div id="listDenda"></div>
 
@@ -216,9 +278,14 @@
 </section>
 
 
-<!-- ================= REKAP ================= -->
-<section id="rekap"
+<!-- =====================================================
+     MENU REKAP
+===================================================== -->
+
+<section
+    id="rekap"
     class="tab-content hidden">
+
 
     <div class="card mb-3">
 
@@ -226,53 +293,75 @@
             📊 Rekap Keseluruhan
         </h2>
 
+
         <div class="grid grid-cols-2 gap-3">
 
+
             <div class="bg-red-50 rounded-xl p-3">
+
                 <div class="text-xs text-gray-500">
                     Total Denda
                 </div>
 
-                <div id="totalDenda"
-                     class="text-xl font-bold text-red-600">
+                <div
+                    id="totalDenda"
+                    class="text-xl font-bold text-red-600">
+
                     Rp0
+
                 </div>
+
             </div>
 
 
             <div class="bg-green-50 rounded-xl p-3">
+
                 <div class="text-xs text-gray-500">
                     Total Dibayar
                 </div>
 
-                <div id="totalDibayar"
-                     class="text-xl font-bold text-green-600">
+                <div
+                    id="totalDibayar"
+                    class="text-xl font-bold text-green-600">
+
                     Rp0
+
                 </div>
+
             </div>
 
 
             <div class="bg-orange-50 rounded-xl p-3">
+
                 <div class="text-xs text-gray-500">
                     Sisa Denda
                 </div>
 
-                <div id="totalSisa"
-                     class="text-xl font-bold text-orange-600">
+                <div
+                    id="totalSisa"
+                    class="text-xl font-bold text-orange-600">
+
                     Rp0
+
                 </div>
+
             </div>
 
 
             <div class="bg-blue-50 rounded-xl p-3">
+
                 <div class="text-xs text-gray-500">
                     Jumlah Santri
                 </div>
 
-                <div id="jumlahSantri"
-                     class="text-xl font-bold text-blue-600">
+                <div
+                    id="jumlahSantri"
+                    class="text-xl font-bold text-blue-600">
+
                     0
+
                 </div>
+
             </div>
 
         </div>
@@ -286,6 +375,7 @@
             📋 Detail Rekap
         </h3>
 
+
         <div id="detailRekap"></div>
 
     </div>
@@ -293,7 +383,10 @@
 </section>
 
 
-<!-- ================= KELOLA SANTRI ================= -->
+<!-- =====================================================
+     KELOLA SANTRI
+===================================================== -->
+
 <section class="mt-4">
 
     <div class="card">
@@ -311,6 +404,7 @@
                     Nama Santri
                 </label>
 
+
                 <input
                     id="namaSantriBaru"
                     type="text"
@@ -320,11 +414,13 @@
 
 
                 <label class="text-sm font-bold">
-                    Kelompok
+                    Kelompok / Jadwal
                 </label>
 
-                <select id="kelompokSantriBaru"
-                        class="mt-1 mb-3">
+
+                <select
+                    id="kelompokSantriBaru"
+                    class="mt-1 mb-3">
 
                     <option value="Non-Piket">
                         Non-Piket
@@ -369,7 +465,7 @@
                 <div class="mt-5">
 
                     <h3 class="font-bold mb-2">
-                        Daftar Santri Tambahan
+                        Santri Tambahan
                     </h3>
 
                     <div id="daftarSantriTambahan"></div>
@@ -385,21 +481,27 @@
 </section>
 
 
-<!-- ================= WHATSAPP ================= -->
+<!-- =====================================================
+     WHATSAPP
+===================================================== -->
+
 <section class="mt-3">
 
     <button
         onclick="kirimWhatsApp()"
         class="w-full bg-green-600 text-white p-4 rounded-xl font-bold shadow">
 
-        📱 Kirim Rekap ke WhatsApp
+        📱 Kirim Rekap Hari Ini / Hari Dipilih
 
     </button>
 
 </section>
 
 
-<!-- ================= RESET ================= -->
+<!-- =====================================================
+     RESET
+===================================================== -->
+
 <section class="mt-3">
 
     <button
@@ -419,7 +521,7 @@
 <script>
 
 /* =========================================================
-   KONFIGURASI
+   PENGATURAN
 ========================================================= */
 
 const BIAYA_PIKET = 3000;
@@ -427,7 +529,7 @@ const BIAYA_ISYA = 5000;
 
 
 /* =========================================================
-   JADWAL PIKET BAWAAN
+   JADWAL BAWAAN
 ========================================================= */
 
 const jadwalBawaan = {
@@ -470,7 +572,7 @@ const jadwalBawaan = {
 
 
 /* =========================================================
-   SANTRI NON PIKET
+   NON PIKET
 ========================================================= */
 
 const nonPiketBawaan = [
@@ -480,28 +582,77 @@ const nonPiketBawaan = [
 
 
 /* =========================================================
-   DATABASE
-   TIDAK MENGUBAH KEY LAMA
+   BACA DATABASE LAMA
 ========================================================= */
 
-let db = JSON.parse(
-    localStorage.getItem("jadwal_app") || "{}"
-);
+/*
+   JANGAN menggunakan localStorage.clear()
 
-let santriTambahan = JSON.parse(
-    localStorage.getItem("santri_tambahan_app") || "[]"
-);
+   Data lama tetap dibaca dari:
+   jadwal_app
+   santri_tambahan_app
+   denda_app
+*/
 
-let dendaData = JSON.parse(
-    localStorage.getItem("denda_app") || "{}"
-);
+
+function bacaLocalStorage(key, nilaiDefault) {
+
+    try {
+
+        const data =
+            localStorage.getItem(key);
+
+        if (!data) {
+            return nilaiDefault;
+        }
+
+        return JSON.parse(data);
+
+    } catch (error) {
+
+        console.error(
+            "Gagal membaca " + key,
+            error
+        );
+
+        return nilaiDefault;
+
+    }
+
+}
+
+
+let db =
+    bacaLocalStorage(
+        "jadwal_app",
+        {}
+    );
+
+
+let santriTambahan =
+    bacaLocalStorage(
+        "santri_tambahan_app",
+        []
+    );
+
+
+let dendaData =
+    bacaLocalStorage(
+        "denda_app",
+        {}
+    );
 
 
 /* =========================================================
-   MIGRASI DATA LAMA
+   PERBAIKI STRUKTUR DATABASE
 ========================================================= */
 
 function pastikanData(nama) {
+
+    /*
+       Kalau data lama sudah ada,
+       JANGAN ditimpa.
+    */
 
     if (!db[nama]) {
 
@@ -517,37 +668,57 @@ function pastikanData(nama) {
 
     }
 
-    if (db[nama].ja == null) db[nama].ja = 0;
-    if (db[nama].so == null) db[nama].so = 0;
-    if (db[nama].di == null) db[nama].di = 0;
-    if (db[nama].ap == null) db[nama].ap = 0;
-    if (db[nama].tp == null) db[nama].tp = 0;
-    if (db[nama].sd == null) db[nama].sd = 0;
-    if (db[nama].bt == null) db[nama].bt = 0;
+
+    /*
+       Hanya membuat field yang belum ada.
+       Data lama tidak diubah.
+    */
+
+    if (db[nama].ja == null)
+        db[nama].ja = 0;
+
+    if (db[nama].so == null)
+        db[nama].so = 0;
+
+    if (db[nama].di == null)
+        db[nama].di = 0;
+
+    if (db[nama].ap == null)
+        db[nama].ap = 0;
+
+    if (db[nama].tp == null)
+        db[nama].tp = 0;
+
+    if (db[nama].sd == null)
+        db[nama].sd = 0;
+
+    if (db[nama].bt == null)
+        db[nama].bt = 0;
 
 }
 
 
 /* =========================================================
-   AMBIL SEMUA SANTRI
+   SEMUA SANTRI
 ========================================================= */
 
 function semuaSantri() {
 
-    let hasil = [];
+    const hasil = [];
 
 
-    Object.values(jadwalBawaan).forEach(list => {
+    Object.values(jadwalBawaan)
+        .forEach(daftar => {
 
-        list.forEach(nama => {
+            daftar.forEach(nama => {
 
-            if (!hasil.includes(nama)) {
-                hasil.push(nama);
-            }
+                if (!hasil.includes(nama)) {
+                    hasil.push(nama);
+                }
+
+            });
 
         });
-
-    });
 
 
     nonPiketBawaan.forEach(nama => {
@@ -559,16 +730,36 @@ function semuaSantri() {
     });
 
 
-    santriTambahan.forEach(item => {
+    /*
+       Data tambahan.
+    */
 
-        if (!hasil.includes(item.nama)) {
-            hasil.push(item.nama);
-        }
+    if (Array.isArray(santriTambahan)) {
 
+        santriTambahan.forEach(item => {
+
+            if (
+                item &&
+                item.nama &&
+                !hasil.includes(item.nama)
+            ) {
+
+                hasil.push(item.nama);
+
+            }
+
+        });
+
+    }
+
+
+    /*
+       Pastikan data setiap santri ada.
+    */
+
+    hasil.forEach(nama => {
+        pastikanData(nama);
     });
-
-
-    hasil.forEach(nama => pastikanData(nama));
 
 
     return hasil;
@@ -577,20 +768,27 @@ function semuaSantri() {
 
 
 /* =========================================================
-   SIMPAN
+   SIMPAN DATA
 ========================================================= */
 
 function save() {
+
+    /*
+       Tidak menghapus data lama.
+       Hanya menyimpan keadaan database terbaru.
+    */
 
     localStorage.setItem(
         "jadwal_app",
         JSON.stringify(db)
     );
 
+
     localStorage.setItem(
         "santri_tambahan_app",
         JSON.stringify(santriTambahan)
     );
+
 
     localStorage.setItem(
         "denda_app",
@@ -606,14 +804,15 @@ function save() {
 
 function rupiah(angka) {
 
-    return "Rp" + Number(angka || 0)
+    return "Rp" +
+        Number(angka || 0)
         .toLocaleString("id-ID");
 
 }
 
 
 /* =========================================================
-   HARI INDONESIA
+   HARI
 ========================================================= */
 
 const namaHari = [
@@ -628,33 +827,53 @@ const namaHari = [
 
 
 /* =========================================================
-   SET HARI OTOMATIS
+   HARI OTOMATIS
 ========================================================= */
 
 function setHariOtomatis() {
 
     const hariIni =
-        namaHari[new Date().getDay()];
+        namaHari[
+            new Date().getDay()
+        ];
+
 
     const select =
-        document.getElementById("hariSelect");
+        document.getElementById(
+            "hariSelect"
+        );
+
 
     const option =
         [...select.options]
-        .find(o => o.value === hariIni);
+        .find(
+            option =>
+                option.value === hariIni
+        );
 
 
     if (option) {
 
-        select.value = hariIni;
+        select.value =
+            hariIni;
 
-        document.getElementById("badgeHariIni")
-            .textContent = "HARI INI";
+
+        document.getElementById(
+            "badgeHariIni"
+        ).textContent =
+            "HARI INI";
+
 
     } else {
 
-        document.getElementById("badgeHariIni")
-            .textContent = "TIDAK ADA JADWAL";
+        /*
+           Jumat belum mempunyai jadwal.
+        */
+
+        document.getElementById(
+            "badgeHariIni"
+        ).textContent =
+            "TIDAK ADA JADWAL";
 
     }
 
@@ -669,9 +888,9 @@ function bukaTab(tab) {
 
     document
         .querySelectorAll(".tab-content")
-        .forEach(el => {
+        .forEach(section => {
 
-            el.classList.add("hidden");
+            section.classList.add("hidden");
 
         });
 
@@ -683,27 +902,51 @@ function bukaTab(tab) {
 
     document
         .querySelectorAll("[id^='tab']")
-        .forEach(btn => {
+        .forEach(button => {
 
-            btn.classList.remove("tab-active");
+            button.classList.remove(
+                "tab-active"
+            );
 
         });
 
 
+    const id =
+        "tab" +
+        tab.charAt(0).toUpperCase() +
+        tab.slice(1);
+
+
     const tombol =
-        document.getElementById(
-            "tab" +
-            tab.charAt(0).toUpperCase() +
-            tab.slice(1)
-        );
+        document.getElementById(id);
 
 
     if (tombol) {
-        tombol.classList.add("tab-active");
+
+        tombol.classList.add(
+            "tab-active"
+        );
+
     }
 
 
     render();
+
+}
+
+
+/* =========================================================
+   ESCAPE
+========================================================= */
+
+function escapeJS(text) {
+
+    return String(text)
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, "\\n")
+        .replace(/\r/g, "\\r");
 
 }
 
@@ -715,56 +958,102 @@ function bukaTab(tab) {
 function renderPiket() {
 
     const hari =
-        document.getElementById("hariSelect").value;
+        document.getElementById(
+            "hariSelect"
+        ).value;
+
 
     const container =
-        document.getElementById("listPiket");
+        document.getElementById(
+            "listPiket"
+        );
+
 
     const info =
-        document.getElementById("infoHari");
+        document.getElementById(
+            "infoHari"
+        );
 
 
-    const daftar =
+    /*
+       Jadwal bawaan.
+    */
+
+    let daftar =
         jadwalBawaan[hari] || [];
 
 
-    const tambahan =
-        santriTambahan
-        .filter(x => x.kelompok === hari)
-        .map(x => x.nama);
+    /*
+       Tambahkan santri tambahan.
+    */
+
+    if (Array.isArray(santriTambahan)) {
+
+        const tambahan =
+            santriTambahan
+            .filter(
+                item =>
+                    item.kelompok === hari
+            )
+            .map(
+                item => item.nama
+            );
 
 
-    const semua =
-        [...daftar, ...tambahan];
+        daftar = [
+            ...daftar,
+            ...tambahan
+        ];
+
+    }
+
+
+    /*
+       Hilangkan nama duplikat.
+    */
+
+    daftar =
+        [...new Set(daftar)];
 
 
     info.textContent =
-        hari + " — " +
-        semua.length +
+        hari +
+        " — " +
+        daftar.length +
         " santri";
 
 
-    if (!semua.length) {
+    if (!daftar.length) {
 
         container.innerHTML = `
-            <div class="text-center text-gray-500 py-5">
-                Tidak ada jadwal piket pada hari ini.
+            <div class="text-center text-gray-500 py-6">
+
+                📅 Tidak ada jadwal piket
+                pada hari ${hari}.
+
             </div>
         `;
 
     } else {
 
         container.innerHTML =
-            semua.map(nama => {
+            daftar.map(nama => {
 
                 pastikanData(nama);
 
+
+                const d =
+                    db[nama];
+
+
                 return `
+
                 <div class="santri-row">
 
                     <div class="font-bold mb-2">
                         ${nama}
                     </div>
+
 
                     <div class="grid grid-cols-2 gap-2">
 
@@ -772,9 +1061,9 @@ function renderPiket() {
                             onclick="tambahPiket('${escapeJS(nama)}','ja')"
                             class="bg-red-100 text-red-700 p-2 rounded-lg text-sm">
 
-                            Tidak Sholat
+                            ❌ Tidak Sholat
                             <br>
-                            <b>${db[nama].ja}</b>
+                            <b>${d.ja}</b>
 
                         </button>
 
@@ -783,15 +1072,29 @@ function renderPiket() {
                             onclick="tambahPiket('${escapeJS(nama)}','so')"
                             class="bg-orange-100 text-orange-700 p-2 rounded-lg text-sm">
 
-                            Tidak Sorogan
+                            📖 Tidak Sorogan
                             <br>
-                            <b>${db[nama].so}</b>
+                            <b>${d.so}</b>
 
                         </button>
 
                     </div>
 
+
+                    <div class="text-xs text-gray-500 mt-2">
+
+                        Denda Piket:
+                        <b>
+                            ${rupiah(
+                                (d.ja + d.so) *
+                                BIAYA_PIKET
+                            )}
+                        </b>
+
+                    </div>
+
                 </div>
+
                 `;
 
             }).join("");
@@ -811,23 +1114,45 @@ function renderPiket() {
 function renderNonPiket() {
 
     const container =
-        document.getElementById("listNonPiket");
+        document.getElementById(
+            "listNonPiket"
+        );
 
 
-    const tambahan =
-        santriTambahan
-        .filter(x => x.kelompok === "Non-Piket")
-        .map(x => x.nama);
+    let daftar =
+        [...nonPiketBawaan];
 
 
-    const semua =
-        [...nonPiketBawaan, ...tambahan];
+    if (Array.isArray(santriTambahan)) {
+
+        const tambahan =
+            santriTambahan
+            .filter(
+                item =>
+                    item.kelompok ===
+                    "Non-Piket"
+            )
+            .map(
+                item =>
+                    item.nama
+            );
 
 
-    if (!semua.length) {
+        daftar.push(
+            ...tambahan
+        );
+
+    }
+
+
+    daftar =
+        [...new Set(daftar)];
+
+
+    if (!daftar.length) {
 
         container.innerHTML =
-            `<p class="text-gray-500 text-sm">
+            `<p class="text-sm text-gray-500">
                 Tidak ada santri non-piket.
             </p>`;
 
@@ -837,9 +1162,7 @@ function renderNonPiket() {
 
 
     container.innerHTML =
-        semua.map(nama => {
-
-            pastikanData(nama);
+        daftar.map(nama => {
 
             return `
                 <div class="py-2 border-b last:border-0">
@@ -849,7 +1172,7 @@ function renderNonPiket() {
                     </div>
 
                     <div class="text-xs text-gray-500">
-                        Tidak ikut piket
+                        Tidak mempunyai jadwal piket
                     </div>
 
                 </div>
@@ -868,7 +1191,14 @@ function tambahPiket(nama, jenis) {
 
     pastikanData(nama);
 
-    db[nama][jenis]++;
+
+    db[nama][jenis] =
+        Number(db[nama][jenis] || 0) + 1;
+
+
+    /*
+       Denda otomatis dihitung dari data.
+    */
 
     save();
 
@@ -884,7 +1214,9 @@ function tambahPiket(nama, jenis) {
 function renderIsya() {
 
     const container =
-        document.getElementById("listIsya");
+        document.getElementById(
+            "listIsya"
+        );
 
 
     const semua =
@@ -894,18 +1226,23 @@ function renderIsya() {
     container.innerHTML =
         semua.map(nama => {
 
-            pastikanData(nama);
+            const d =
+                db[nama];
 
-            const d = db[nama];
 
-            const totalIsya =
-                d.ap + d.tp;
+            const total =
+                Number(d.ap || 0) +
+                Number(d.tp || 0);
 
-            const jatuhTempo =
-                Math.floor(totalIsya / 5);
+
+            const wajib =
+                Math.floor(
+                    total / 5
+                );
 
 
             return `
+
             <div class="santri-row">
 
                 <div class="font-bold mb-2">
@@ -913,13 +1250,13 @@ function renderIsya() {
                 </div>
 
 
-                <div class="grid grid-cols-2 gap-2 mb-2">
+                <div class="grid grid-cols-2 gap-2">
 
                     <button
                         onclick="tambahIsya('${escapeJS(nama)}','ap')"
-                        class="bg-red-100 text-red-700 p-2 rounded-lg text-sm">
+                        class="bg-red-100 text-red-700 p-2 rounded-lg">
 
-                        Alpa
+                        ❌ Alpa
                         <br>
                         <b>${d.ap}</b>
 
@@ -928,9 +1265,9 @@ function renderIsya() {
 
                     <button
                         onclick="tambahIsya('${escapeJS(nama)}','tp')"
-                        class="bg-yellow-100 text-yellow-700 p-2 rounded-lg text-sm">
+                        class="bg-yellow-100 text-yellow-700 p-2 rounded-lg">
 
-                        Terlambat
+                        ⏰ Terlambat
                         <br>
                         <b>${d.tp}</b>
 
@@ -939,14 +1276,20 @@ function renderIsya() {
                 </div>
 
 
-                <div class="text-xs text-gray-600">
-                    Pelanggaran Isya: ${totalIsya}
+                <div class="text-xs text-gray-500 mt-2">
+
+                    Total pelanggaran:
+                    <b>${total}</b>
+
                     <br>
-                    Sanksi jatuh tempo:
-                    <b>${jatuhTempo}</b>
+
+                    Sanksi setiap 5 pelanggaran:
+                    <b>${wajib}</b>
+
                 </div>
 
             </div>
+
             `;
 
         }).join("");
@@ -962,9 +1305,10 @@ function tambahIsya(nama, jenis) {
 
     pastikanData(nama);
 
-    db[nama][jenis]++;
 
-    cekSanksiIsya(nama);
+    db[nama][jenis] =
+        Number(db[nama][jenis] || 0) + 1;
+
 
     save();
 
@@ -974,129 +1318,132 @@ function tambahIsya(nama, jenis) {
 
 
 /* =========================================================
-   CEK SANKSI ISYA
-========================================================= */
-
-function cekSanksiIsya(nama) {
-
-    const d = db[nama];
-
-    const total =
-        d.ap + d.tp;
-
-
-    const wajib =
-        Math.floor(total / 5);
-
-
-    const sudahUang =
-        Math.floor(d.sd / BIAYA_ISYA);
-
-
-    const sudahBotak =
-        d.bt;
-
-
-    const selesai =
-        sudahUang + sudahBotak;
-
-
-    const belum =
-        wajib - selesai;
-
-
-    /*
-       Tidak otomatis memilih uang/botak.
-       Jika ada sanksi baru, user memilih
-       melalui tombol pada menu Denda.
-    */
-
-    return Math.max(0, belum);
-
-}
-
-
-/* =========================================================
-   DENDA
+   HITUNG DENDA
 ========================================================= */
 
 function hitungDenda(nama) {
 
     pastikanData(nama);
 
-    const d = db[nama];
 
+    const d =
+        db[nama];
+
+
+    /*
+       DENDA PIKET
+    */
 
     const dendaPiket =
-        (d.ja * BIAYA_PIKET) +
-        (d.so * BIAYA_PIKET);
+        (
+            Number(d.ja || 0) +
+            Number(d.so || 0)
+        ) *
+        BIAYA_PIKET;
 
+
+    /*
+       DENDA SANKSI ISYA
+    */
 
     const dendaIsya =
-        d.sd;
+        Number(d.sd || 0);
 
+
+    /*
+       TOTAL
+    */
 
     const total =
-        dendaPiket + dendaIsya;
+        dendaPiket +
+        dendaIsya;
 
+
+    /*
+       PEMBAYARAN
+    */
 
     const dibayar =
-        d.di;
+        Number(d.di || 0);
 
+
+    /*
+       SISA
+    */
 
     const sisa =
-        Math.max(0, total - dibayar);
+        Math.max(
+            0,
+            total - dibayar
+        );
 
+
+    /*
+       SANKSI ISYA
+    */
 
     const totalIsya =
-        d.ap + d.tp;
+        Number(d.ap || 0) +
+        Number(d.tp || 0);
 
 
     const sanksiWajib =
-        Math.floor(totalIsya / 5);
+        Math.floor(
+            totalIsya / 5
+        );
 
 
     const sanksiUang =
-        Math.floor(d.sd / BIAYA_ISYA);
+        Math.floor(
+            Number(d.sd || 0) /
+            BIAYA_ISYA
+        );
 
 
     const sanksiBotak =
-        d.bt;
+        Number(d.bt || 0);
 
 
     const sanksiSelesai =
-        sanksiUang + sanksiBotak;
+        sanksiUang +
+        sanksiBotak;
 
 
     const sanksiSisa =
         Math.max(
             0,
-            sanksiWajib - sanksiSelesai
+            sanksiWajib -
+            sanksiSelesai
         );
 
 
     return {
+
         dendaPiket,
         dendaIsya,
         total,
         dibayar,
         sisa,
+
         sanksiWajib,
         sanksiSelesai,
         sanksiSisa
+
     };
 
 }
 
 
 /* =========================================================
-   RENDER DENDA
+   MENU DENDA
 ========================================================= */
 
 function renderDenda() {
 
     const container =
-        document.getElementById("listDenda");
+        document.getElementById(
+            "listDenda"
+        );
 
 
     const semua =
@@ -1114,90 +1461,122 @@ function renderDenda() {
                 hitungDenda(nama);
 
 
-            const tombolSanksi =
-                x.sanksiSisa > 0
-                ? `
-                    <div class="mt-3 bg-yellow-50 rounded-xl p-3">
-
-                        <div class="font-bold text-yellow-800">
-                            ⚠️ Sanksi Isya'
-                        </div>
-
-                        <div class="text-xs mt-1">
-                            Masih ada ${x.sanksiSisa}
-                            sanksi yang belum diselesaikan.
-                        </div>
+            let sanksiHTML = "";
 
 
-                        <div class="grid grid-cols-2 gap-2 mt-2">
+            if (x.sanksiSisa > 0) {
 
-                            <button
-                                onclick="pilihDendaUang('${escapeJS(nama)}')"
-                                class="bg-green-600 text-white p-2 rounded-lg text-sm">
+                sanksiHTML = `
 
-                                💰 Rp5.000
+                <div class="mt-3 bg-yellow-50 rounded-xl p-3">
 
-                            </button>
+                    <div class="font-bold text-yellow-800">
+                        ⚠️ Sanksi Isya'
+                    </div>
 
 
-                            <button
-                                onclick="pilihBotak('${escapeJS(nama)}')"
-                                class="bg-gray-800 text-white p-2 rounded-lg text-sm">
+                    <div class="text-xs mt-1">
 
-                                ✂️ Botak
-
-                            </button>
-
-                        </div>
+                        Masih ada
+                        <b>${x.sanksiSisa}</b>
+                        sanksi yang belum diselesaikan.
 
                     </div>
-                `
-                : "";
+
+
+                    <div class="grid grid-cols-2 gap-2 mt-2">
+
+                        <button
+                            onclick="pilihDendaUang('${escapeJS(nama)}')"
+                            class="bg-green-600 text-white p-2 rounded-lg">
+
+                            💰 Rp5.000
+
+                        </button>
+
+
+                        <button
+                            onclick="pilihBotak('${escapeJS(nama)}')"
+                            class="bg-gray-800 text-white p-2 rounded-lg">
+
+                            ✂️ Botak
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                `;
+
+            }
 
 
             return `
+
             <div class="santri-row">
 
-                <div class="flex justify-between items-center">
+                <div class="flex justify-between">
 
                     <div class="font-bold">
                         ${nama}
                     </div>
 
-                    <div class="text-red-600 font-bold">
+
+                    <div class="font-bold text-red-600">
                         ${rupiah(x.sisa)}
                     </div>
 
                 </div>
 
 
-                <div class="grid grid-cols-2 gap-2 text-xs mt-2">
+                <div class="grid grid-cols-2 gap-2 mt-2 text-xs">
 
                     <div class="bg-red-50 p-2 rounded-lg">
-                        Piket
+
+                        Denda Piket
                         <br>
-                        <b>${rupiah(x.dendaPiket)}</b>
+
+                        <b>
+                            ${rupiah(x.dendaPiket)}
+                        </b>
+
                     </div>
 
 
                     <div class="bg-orange-50 p-2 rounded-lg">
-                        Isya'
+
+                        Denda Isya'
                         <br>
-                        <b>${rupiah(x.dendaIsya)}</b>
+
+                        <b>
+                            ${rupiah(x.dendaIsya)}
+                        </b>
+
                     </div>
 
 
                     <div class="bg-green-50 p-2 rounded-lg">
+
                         Dibayar
                         <br>
-                        <b>${rupiah(x.dibayar)}</b>
+
+                        <b>
+                            ${rupiah(x.dibayar)}
+                        </b>
+
                     </div>
 
 
                     <div class="bg-blue-50 p-2 rounded-lg">
+
                         Sisa
                         <br>
-                        <b>${rupiah(x.sisa)}</b>
+
+                        <b>
+                            ${rupiah(x.sisa)}
+                        </b>
+
                     </div>
 
                 </div>
@@ -1209,6 +1588,7 @@ function renderDenda() {
                         Tambah Pembayaran
                     </label>
 
+
                     <div class="flex gap-2 mt-1">
 
                         <input
@@ -1216,6 +1596,7 @@ function renderDenda() {
                             id="bayar_${encodeURIComponent(nama)}"
                             placeholder="Nominal"
                         >
+
 
                         <button
                             onclick="bayarDenda('${escapeJS(nama)}')"
@@ -1230,9 +1611,10 @@ function renderDenda() {
                 </div>
 
 
-                ${tombolSanksi}
+                ${sanksiHTML}
 
             </div>
+
             `;
 
         }).join("");
@@ -1241,14 +1623,15 @@ function renderDenda() {
 
 
 /* =========================================================
-   BAYAR DENDA
+   BAYAR
 ========================================================= */
 
 function bayarDenda(nama) {
 
     const input =
         document.getElementById(
-            "bayar_" + encodeURIComponent(nama)
+            "bayar_" +
+            encodeURIComponent(nama)
         );
 
 
@@ -1256,9 +1639,14 @@ function bayarDenda(nama) {
         Number(input.value);
 
 
-    if (!nominal || nominal <= 0) {
+    if (
+        !nominal ||
+        nominal <= 0
+    ) {
 
-        alert("Masukkan nominal pembayaran.");
+        alert(
+            "Masukkan nominal pembayaran."
+        );
 
         return;
 
@@ -1268,7 +1656,9 @@ function bayarDenda(nama) {
     pastikanData(nama);
 
 
-    db[nama].di += nominal;
+    db[nama].di =
+        Number(db[nama].di || 0) +
+        nominal;
 
 
     save();
@@ -1279,7 +1669,7 @@ function bayarDenda(nama) {
 
 
 /* =========================================================
-   PILIH DENDA UANG
+   SANKSI UANG
 ========================================================= */
 
 function pilihDendaUang(nama) {
@@ -1293,14 +1683,18 @@ function pilihDendaUang(nama) {
 
     if (x.sanksiSisa <= 0) {
 
-        alert("Tidak ada sanksi yang harus diselesaikan.");
+        alert(
+            "Tidak ada sanksi."
+        );
 
         return;
 
     }
 
 
-    db[nama].sd += BIAYA_ISYA;
+    db[nama].sd =
+        Number(db[nama].sd || 0) +
+        BIAYA_ISYA;
 
 
     save();
@@ -1317,7 +1711,7 @@ function pilihDendaUang(nama) {
 
 
 /* =========================================================
-   PILIH BOTAK
+   SANKSI BOTAK
 ========================================================= */
 
 function pilihBotak(nama) {
@@ -1331,14 +1725,18 @@ function pilihBotak(nama) {
 
     if (x.sanksiSisa <= 0) {
 
-        alert("Tidak ada sanksi yang harus diselesaikan.");
+        alert(
+            "Tidak ada sanksi."
+        );
 
         return;
 
     }
 
 
-    db[nama].bt++;
+    db[nama].bt =
+        Number(db[nama].bt || 0) +
+        1;
 
 
     save();
@@ -1375,53 +1773,73 @@ function renderRekap() {
             hitungDenda(nama);
 
 
-        totalDenda += x.total;
-        totalDibayar += x.dibayar;
-        totalSisa += x.sisa;
+        totalDenda +=
+            x.total;
+
+
+        totalDibayar +=
+            x.dibayar;
+
+
+        totalSisa +=
+            x.sisa;
 
     });
 
 
-    document.getElementById("totalDenda")
-        .textContent = rupiah(totalDenda);
+    document.getElementById(
+        "totalDenda"
+    ).textContent =
+        rupiah(totalDenda);
 
 
-    document.getElementById("totalDibayar")
-        .textContent = rupiah(totalDibayar);
+    document.getElementById(
+        "totalDibayar"
+    ).textContent =
+        rupiah(totalDibayar);
 
 
-    document.getElementById("totalSisa")
-        .textContent = rupiah(totalSisa);
+    document.getElementById(
+        "totalSisa"
+    ).textContent =
+        rupiah(totalSisa);
 
 
-    document.getElementById("jumlahSantri")
-        .textContent = semua.length;
+    document.getElementById(
+        "jumlahSantri"
+    ).textContent =
+        semua.length;
 
 
-    const container =
-        document.getElementById("detailRekap");
+    document.getElementById(
+        "detailRekap"
+    ).innerHTML =
 
-
-    container.innerHTML =
         semua.map(nama => {
-
-            const x =
-                hitungDenda(nama);
-
 
             const d =
                 db[nama];
 
 
+            const x =
+                hitungDenda(nama);
+
+
             return `
+
             <div class="border-b py-3">
 
                 <div class="flex justify-between">
 
-                    <b>${nama}</b>
+                    <b>
+                        ${nama}
+                    </b>
+
 
                     <b class="text-red-600">
+
                         ${rupiah(x.sisa)}
+
                     </b>
 
                 </div>
@@ -1435,7 +1853,7 @@ function renderRekap() {
                     • Tidak Sorogan:
                     ${d.so}
 
-                    • Alpa Isya:
+                    • Alpa:
                     ${d.ap}
 
                     • Terlambat:
@@ -1447,6 +1865,7 @@ function renderRekap() {
                 </div>
 
             </div>
+
             `;
 
         }).join("");
@@ -1461,7 +1880,9 @@ function renderRekap() {
 function tambahSantri() {
 
     const input =
-        document.getElementById("namaSantriBaru");
+        document.getElementById(
+            "namaSantriBaru"
+        );
 
 
     const kelompok =
@@ -1476,23 +1897,32 @@ function tambahSantri() {
 
     if (!nama) {
 
-        alert("Masukkan nama santri.");
+        alert(
+            "Masukkan nama santri."
+        );
 
         return;
 
     }
 
 
+    const semua =
+        semuaSantri();
+
+
     const sudahAda =
-        semuaSantri()
-        .some(x =>
-            x.toLowerCase() === nama.toLowerCase()
+        semua.some(
+            x =>
+                x.toLowerCase() ===
+                nama.toLowerCase()
         );
 
 
     if (sudahAda) {
 
-        alert("Nama santri sudah ada.");
+        alert(
+            "Nama santri sudah ada."
+        );
 
         return;
 
@@ -1500,8 +1930,10 @@ function tambahSantri() {
 
 
     santriTambahan.push({
+
         nama: nama,
         kelompok: kelompok
+
     });
 
 
@@ -1538,7 +1970,12 @@ function renderDaftarSantriTambahan() {
         );
 
 
-    if (!santriTambahan.length) {
+    if (
+        !Array.isArray(
+            santriTambahan
+        ) ||
+        santriTambahan.length === 0
+    ) {
 
         container.innerHTML =
             `<p class="text-sm text-gray-500">
@@ -1551,9 +1988,11 @@ function renderDaftarSantriTambahan() {
 
 
     container.innerHTML =
-        santriTambahan.map((item, index) => {
+        santriTambahan
+        .map((item, index) => {
 
             return `
+
             <div class="flex justify-between items-center border-b py-2">
 
                 <div>
@@ -1578,6 +2017,7 @@ function renderDaftarSantriTambahan() {
                 </button>
 
             </div>
+
             `;
 
         }).join("");
@@ -1600,19 +2040,27 @@ function hapusSantriTambahan(index) {
 
     const yakin =
         confirm(
-            "Hapus santri " +
+            "Hapus " +
             item.nama +
-            " dari daftar?"
+            " dari daftar santri?"
         );
 
 
     if (!yakin) return;
 
 
+    /*
+       Hanya menghapus santri tambahan.
+       Data santri bawaan tidak disentuh.
+    */
+
     delete db[item.nama];
 
 
-    santriTambahan.splice(index, 1);
+    santriTambahan.splice(
+        index,
+        1
+    );
 
 
     save();
@@ -1626,24 +2074,91 @@ function hapusSantriTambahan(index) {
 
 /* =========================================================
    WHATSAPP
+   HANYA HARI YANG DIPILIH
 ========================================================= */
 
 function kirimWhatsApp() {
 
-    const semua =
-        semuaSantri();
+    const hari =
+        document.getElementById(
+            "hariSelect"
+        ).value;
 
+
+    /*
+       Ambil santri pada hari tersebut saja.
+    */
+
+    let daftar =
+        jadwalBawaan[hari] || [];
+
+
+    /*
+       Tambahkan santri tambahan
+       yang kelompoknya sama.
+    */
+
+    if (Array.isArray(santriTambahan)) {
+
+        const tambahan =
+            santriTambahan
+            .filter(
+                item =>
+                    item.kelompok === hari
+            )
+            .map(
+                item =>
+                    item.nama
+            );
+
+
+        daftar = [
+            ...daftar,
+            ...tambahan
+        ];
+
+    }
+
+
+    daftar =
+        [...new Set(daftar)];
+
+
+    if (!daftar.length) {
+
+        alert(
+            "Tidak ada santri pada jadwal " +
+            hari
+        );
+
+        return;
+
+    }
+
+
+    /*
+       JUDUL REKAP
+    */
 
     let teks =
 `LAPORAN KEDISIPLINAN SANTRI
 PONDOK PESANTREN AL-MU'AWANAH SUKAMANDI
+
+📅 HARI: ${hari}
 
 ================================
 
 `;
 
 
-    semua.forEach(nama => {
+    /*
+       HANYA SANTRI HARI TERSEBUT
+    */
+
+    daftar.forEach((nama, index) => {
+
+        pastikanData(nama);
+
 
         const d =
             db[nama];
@@ -1655,15 +2170,22 @@ PONDOK PESANTREN AL-MU'AWANAH SUKAMANDI
 
         teks +=
 `
-${nama}
+${index + 1}. ${nama}
+
+Piket Ashar:
 - Tidak Sholat : ${d.ja}
 - Tidak Sorogan : ${d.so}
-- Alpa Isya : ${d.ap}
-- Terlambat Isya : ${d.tp}
-- Botak : ${d.bt}
+
+Ba'da Isya':
+- Alpa : ${d.ap}
+- Terlambat : ${d.tp}
+
+Denda:
+- Denda Piket : ${rupiah(x.dendaPiket)}
+- Denda Isya' : ${rupiah(x.dendaIsya)}
 - Total Denda : ${rupiah(x.total)}
 - Dibayar : ${rupiah(x.dibayar)}
-- Sisa Denda : ${rupiah(x.sisa)}
+- Sisa : ${rupiah(x.sisa)}
 
 `;
 
@@ -1673,8 +2195,14 @@ ${nama}
     teks +=
 `
 ================================
-Laporan dibuat otomatis dari
-Sistem Monitoring Santri.
+
+REKAP HARI ${hari}
+
+Jumlah Santri : ${daftar.length}
+
+Laporan dibuat dari:
+Sistem Monitoring Santri
+Al-Mu'awanah Sukamandi
 `;
 
 
@@ -1683,7 +2211,10 @@ Sistem Monitoring Santri.
         encodeURIComponent(teks);
 
 
-    window.open(url, "_blank");
+    window.open(
+        url,
+        "_blank"
+    );
 
 }
 
@@ -1697,18 +2228,30 @@ function resetData() {
     const yakin =
         confirm(
             "PERINGATAN!\n\n" +
-            "Semua data monitoring, pelanggaran, " +
-            "pembayaran dan santri tambahan akan dihapus.\n\n" +
-            "Lanjutkan?"
+            "Ini akan menghapus seluruh data " +
+            "pelanggaran dan pembayaran.\n\n" +
+            "Data santri bawaan juga tidak akan " +
+            "dipulihkan otomatis.\n\n" +
+            "Yakin ingin melanjutkan?"
         );
 
 
     if (!yakin) return;
 
 
+    /*
+       RESET HANYA JIKA USER BENAR-BENAR MEMILIH.
+    */
+
     db = {};
 
+
+    /*
+       Santri tambahan juga dihapus.
+    */
+
     santriTambahan = [];
+
 
     dendaData = {};
 
@@ -1721,33 +2264,14 @@ function resetData() {
 
 
     alert(
-        "Data monitoring berhasil direset."
+        "Data berhasil direset."
     );
 
 }
 
 
 /* =========================================================
-   ESCAPE NAMA UNTUK JAVASCRIPT
-========================================================= */
-
-function escapeJS(text) {
-
-    return String(text)
-        .replace(/\\/g, "\\\\")
-        .replace(/'/g, "\\'")
-        .replace(/"/g, '\\"')
-        .replace(/\n/g, "\\n")
-        .replace(/\r/g, "\\r");
-
-}
-
-
-/* =========================================================
    RENDER UTAMA
-   PENTING:
-   JANGAN SET HARI DI SINI.
-   Supaya user bisa memilih hari lain.
 ========================================================= */
 
 function render() {
@@ -1764,14 +2288,29 @@ function render() {
 
 
 /* =========================================================
-   INISIALISASI
+   MULAI APLIKASI
 ========================================================= */
+
+/*
+   Pastikan data yang sudah ada tetap dibaca.
+*/
 
 semuaSantri();
 
+
+/*
+   Otomatis pilih hari sekarang.
+*/
+
 setHariOtomatis();
 
+
+/*
+   Tampilkan aplikasi.
+*/
+
 render();
+
 
 renderDaftarSantriTambahan();
 
