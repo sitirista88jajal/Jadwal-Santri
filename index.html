@@ -1,648 +1,717 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistem Monitoring & Absensi Santri - Al-Mu'awanah Sukamandi</title>
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-body{font-family:'Plus Jakarta Sans',sans-serif}
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:#022c22}
-::-webkit-scrollbar-thumb{background:#059669;border-radius:10px}
-</style>
-</head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center p-3 sm:p-6 pb-20">
+<!DOCTYPE html>  <html lang="id">    <head>    
+    <meta charset="UTF-8">    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <title>Sistem Monitoring & Absensi Santri - Al-Mu'awanah Sukamandi</title>    
+    <!-- Tailwind CSS v4 CDN -->    
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">    
+    <style>    
+        body {     
+            font-family: 'Plus Jakarta Sans', sans-serif;     
+        }    
+        ::-webkit-scrollbar {    
+            width: 6px;    
+            height: 6px;    
+        }    
+        ::-webkit-scrollbar-track {    
+            background: #022c22;    
+        }    
+        ::-webkit-scrollbar-thumb {    
+            background: #059669;    
+            border-radius: 10px;    
+        }    
+    </style>    
+</head>    
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center p-3 sm:p-6 pb-20">  <!-- Container Utama -->    
+<div class="w-full max-w-md bg-slate-900 rounded-3xl shadow-2xl border border-emerald-950/50 p-5 sm:p-6 mb-6 relative">    <!-- Header Pesantren & Logo -->    
+<div class="text-center mb-6 flex flex-col items-center">    
+    <button onclick="openKelolaSantriModal()" class="absolute top-4 right-4 bg-emerald-950 hover:bg-emerald-900 text-emerald-400 text-[10px] font-bold px-3 py-1.5 rounded-xl border border-emerald-800/40 flex items-center gap-1 transition cursor-pointer">    
+        ⚙️ Kelola Santri    
+    </button>    
+    <div id="logoContainer" class="relative w-24 h-24 mb-4 bg-white p-1 rounded-full shadow-lg border-2 border-emerald-500 overflow-hidden flex items-center justify-center">    
+        <img id="logoPesantren" src="1000302681.png" alt="Logo Al-Mu'awanah" class="object-contain w-full h-full" onerror="handleLogoError()">    
+    </div>    
+    <span class="bg-emerald-950/60 text-emerald-400 text-[10px] font-bold tracking-widest uppercase px-3.5 py-1 rounded-full border border-emerald-800/30">    
+        PONDOK PESANTREN    
+    </span>    
+    <h1 class="text-lg sm:text-xl font-black tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 mt-2">    
+        AL-MU'AWANAH    
+    </h1>    
+    <p class="text-xs text-emerald-400 font-bold tracking-wider">SUKAMANDI</p>    
+    <p class="text-[10px] text-slate-400 mt-1">Sistem Absensi, Keterlambatan & Denda Santri</p>    
+</div>    
 
-<div class="w-full max-w-md bg-slate-900 rounded-3xl shadow-2xl border border-emerald-950/50 p-5 sm:p-6 mb-6 relative">
-<header class="text-center mb-6 flex flex-col items-center">
-<button onclick="openKelolaSantriModal()" class="absolute top-4 right-4 bg-emerald-950 hover:bg-emerald-900 text-emerald-400 text-[10px] font-bold px-3 py-1.5 rounded-xl border border-emerald-800/40">⚙️ Kelola Santri</button>
-<div id="logoContainer" class="relative w-24 h-24 mb-4 bg-white p-1 rounded-full shadow-lg border-2 border-emerald-500 overflow-hidden flex items-center justify-center">
-<img id="logoPesantren" src="1000302681.png" alt="Logo Al-Mu'awanah" class="object-contain w-full h-full" onerror="handleLogoError()">
+<!-- Navigation Tabs (4 Menu Utama) -->    
+<div class="grid grid-cols-4 gap-1 bg-slate-950 p-1.5 rounded-2xl mb-6 border border-emerald-950/40">    
+    <button onclick="switchTab('piket')" id="tab-piket" class="text-[11px] font-bold py-2.5 rounded-xl transition-all duration-200 bg-emerald-600 text-white shadow-lg shadow-emerald-950/50 cursor-pointer text-center">    
+        Piket    
+    </button>    
+    <button onclick="switchTab('isya')" id="tab-isya" class="text-[11px] font-bold py-2.5 rounded-xl transition-all duration-200 text-slate-400 hover:text-emerald-300 cursor-pointer text-center">    
+        Isya'    
+    </button>    
+    <button onclick="switchTab('denda')" id="tab-denda" class="text-[11px] font-bold py-2.5 rounded-xl transition-all duration-200 text-slate-400 hover:text-emerald-300 cursor-pointer text-center relative">    
+        Denda    
+        <span id="badgeDendaAktif" class="hidden absolute -top-1 -right-1 bg-rose-600 text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-slate-900">0</span>    
+    </button>    
+    <button onclick="switchTab('rekap')" id="tab-rekap" class="text-[11px] font-bold py-2.5 rounded-xl transition-all duration-200 text-slate-400 hover:text-emerald-300 cursor-pointer text-center">    
+        Rekap    
+    </button>    
+</div>    
+
+<!-- INFO KETENTUAN RESMI -->    
+<div class="bg-slate-950/40 border border-emerald-950/30 rounded-2xl p-3.5 mb-5 space-y-2 text-[11px] text-slate-400">    
+    <div class="flex items-start gap-2.5">    
+        <span class="text-emerald-400 font-bold">🕌</span>    
+        <div>    
+            <span class="font-semibold text-slate-300">Ketentuan Roster Piket (Ashar):</span><br>    
+            • Tidak Sholat / Tidak Sorogan: <span class="text-rose-400 font-bold">Rp3.000 / pelanggaran</span>    
+        </div>    
+    </div>    
+    <div class="flex items-start gap-2.5 border-t border-emerald-950/30 pt-2">    
+        <span class="text-red-400 font-bold">⚠️</span>    
+        <div>    
+            <span class="font-semibold text-slate-300">Ba'da Isya (Kelipatan 5 Pelanggaran):</span><br>    
+            • Wajib memilih sanksi: <span class="text-yellow-400 font-semibold">Denda Rp5.000</span> ATAU <span class="text-yellow-400 font-semibold">Hukum Botak 👩‍🦲</span>.    
+        </div>    
+    </div>    
+</div>    
+
+<!-- TAB 1: PIKET HARIAN -->    
+<div id="panel-piket" class="space-y-5">    
+    <div>    
+        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📅 Pilih Hari Roster:</label>    
+        <div class="relative">    
+            <select id="daySelect" onchange="renderApp()" class="w-full bg-slate-950 border border-emerald-950/60 rounded-2xl p-3.5 text-sm text-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 appearance-none cursor-pointer">    
+                <option value="Sabtu">Sabtu</option>    
+                <option value="Minggu">Minggu</option>    
+                <option value="Senin">Senin</option>    
+                <option value="Selasa" selected>Selasa</option>    
+                <option value="Rabu">Rabu</option>    
+                <option value="Kamis">Kamis</option>    
+            </select>    
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-emerald-500">▼</div>    
+        </div>    
+    </div>    
+
+    <div class="border-t border-emerald-950/50 my-4"></div>    
+    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Daftar Santri Piket Hari Ini</h3>    
+    <div id="piketListContainer" class="space-y-4"></div>    
+</div>    
+
+<!-- TAB 2: PENGAJIAN BA'DA ISYA -->    
+<div id="panel-isya" class="hidden space-y-4">    
+    <div>    
+        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔍 Cari Nama Santri:</label>    
+        <input type="text" id="searchInput" oninput="renderApp()" placeholder="Ketik nama santri..." class="w-full bg-slate-950 border border-emerald-950/60 rounded-2xl p-3 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500">    
+    </div>    
+
+    <div class="flex justify-between items-center px-1">    
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Kehadiran Pengajian Ba'da Isya</span>    
+        <span class="text-[10px] bg-emerald-950 text-emerald-300 px-2.5 py-0.5 rounded-full font-medium" id="totalSantriBadge">0 Santri</span>    
+    </div>    
+
+    <div id="isyaListContainer" class="space-y-4 max-h-[400px] overflow-y-auto pr-1"></div>    
+</div>    
+
+<!-- TAB 3: MENU DENDA BERJALAN (BARU) -->    
+<div id="panel-denda" class="hidden space-y-4">    
+    <div class="flex justify-between items-center">    
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Denda & Sanksi Berjalan</h2>    
+        <span class="text-[10px] bg-rose-950/80 text-rose-300 px-2.5 py-0.5 rounded-full border border-rose-900/40 font-bold" id="totalDendaBerjalanBadge">0 Aktif</span>    
+    </div>    
+
+    <!-- Sub-Filter Denda -->    
+    <div class="grid grid-cols-2 gap-2 bg-slate-950 p-1 rounded-xl border border-emerald-950/40 text-xs font-bold">    
+        <button onclick="switchSubDenda('uang')" id="subtab-uang" class="py-2 rounded-lg bg-emerald-600 text-white cursor-pointer">💵 Denda Uang</button>    
+        <button onclick="switchSubDenda('botak')" id="subtab-botak" class="py-2 rounded-lg text-slate-400 hover:text-white cursor-pointer">👩‍🦲 Sanksi Botak</button>    
+    </div>    
+
+    <!-- List Denda Uang -->    
+    <div id="panel-denda-uang" class="space-y-3 max-h-[380px] overflow-y-auto pr-1"></div>    
+
+    <!-- List Sanksi Botak -->    
+    <div id="panel-denda-botak" class="hidden space-y-3 max-h-[380px] overflow-y-auto pr-1"></div>    
+</div>    
+
+<!-- TAB 4: REKAPITULASI & LAPORAN -->    
+<div id="panel-rekap" class="hidden space-y-4">    
+    <div class="flex justify-between items-center">    
+        <div class="flex flex-col">    
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Rincian & Pembayaran</h2>    
+            <span class="text-[9px] text-slate-500 font-medium">*Laporan resmi kedisiplinan dan administrasi</span>    
+        </div>    
+        <span class="text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded-md font-semibold border border-emerald-900/30 shrink-0">Live Update</span>    
+    </div>    
+        
+    <div id="summaryContainer" class="space-y-3 max-h-[350px] overflow-y-auto pr-1"></div>    
+
+    <div class="bg-slate-950 p-4 rounded-2xl border border-emerald-950/60 mt-4 space-y-2.5">    
+        <h4 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Statistik Akumulasi</h4>    
+        <div class="grid grid-cols-2 gap-3">    
+            <div class="bg-slate-900/50 p-2.5 rounded-xl border border-emerald-950/30">    
+                <span class="block text-[9px] text-slate-400">Total Denda Terpikul</span>    
+                <span id="statTotalDenda" class="text-sm font-bold text-rose-400">Rp0</span>    
+            </div>    
+            <div class="bg-slate-900/50 p-2.5 rounded-xl border border-emerald-950/30">    
+                <span class="block text-[9px] text-slate-400">Total Telah Dibayar</span>    
+                <span id="statTotalBayar" class="text-sm font-bold text-emerald-400">Rp0</span>    
+            </div>    
+        </div>    
+    </div>    
+
+    <button onclick="showResetModal()" class="w-full mt-4 text-[10px] text-red-400/80 hover:text-red-400 hover:underline py-2 border border-dashed border-red-950/45 hover:border-red-900/60 rounded-xl cursor-pointer">    
+        ⚠️ Reset Semua Data Aplikasi    
+    </button>    
 </div>
-<span class="bg-emerald-950/60 text-emerald-400 text-[10px] font-bold tracking-widest uppercase px-3.5 py-1 rounded-full border border-emerald-800/30">PONDOK PESANTREN</span>
-<h1 class="text-lg sm:text-xl font-black tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 mt-2">AL-MU'AWANAH</h1>
-<p class="text-xs text-emerald-400 font-bold tracking-wider">SUKAMANDI</p>
-<p class="text-[10px] text-slate-400 mt-1">Sistem Absensi, Keterlambatan & Denda Santri</p>
-</header>
 
-<div class="grid grid-cols-4 gap-1 bg-slate-950 p-1.5 rounded-2xl mb-6 border border-emerald-950/40">
-<button onclick="switchTab('piket')" id="tab-piket" class="tab-active">Piket</button>
-<button onclick="switchTab('isya')" id="tab-isya" class="tab-normal">Isya'</button>
-<button onclick="switchTab('denda')" id="tab-denda" class="tab-normal relative">Denda<span id="badgeDendaAktif" class="hidden absolute -top-1 -right-1 bg-rose-600 text-white text-[8px] font-black w-4 h-4 rounded-full items-center justify-center border border-slate-900">0</span></button>
-<button onclick="switchTab('rekap')" id="tab-rekap" class="tab-normal">Rekap</button>
+</div>    <!-- MODAL KELOLA SANTRI (BARU & KELUAR) -->    <div id="kelolaSantriModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300 z-50">    
+    <div class="bg-slate-950 border border-emerald-900/40 w-full max-w-sm rounded-3xl p-5 transform scale-95 transition-all duration-300 space-y-4 max-h-[90vh] flex flex-col">    
+        <div class="flex justify-between items-center border-b border-emerald-950/60 pb-3">    
+            <h3 class="text-sm font-bold text-slate-100 flex items-center gap-1.5">⚙️ Manajemen Santri</h3>    
+            <button onclick="closeKelolaSantriModal()" class="text-slate-400 hover:text-white text-lg font-bold">✕</button>    
+        </div>    <!-- Form Tambah Santri -->    
+    <div class="bg-slate-900 p-3 rounded-2xl border border-emerald-950/30 space-y-2.5">    
+        <span class="block text-[10px] font-bold text-emerald-400 uppercase tracking-wider">➕ Tambah Santri Baru</span>    
+        <input type="text" id="namaSantriBaru" placeholder="Nama lengkap santri..." class="w-full bg-slate-950 border border-emerald-950/60 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-emerald-500">    
+        <div class="flex gap-2">    
+            <select id="hariPiketSantriBaru" class="w-full bg-slate-950 border border-emerald-950/60 rounded-xl p-2 text-xs text-slate-200">    
+                <option value="Non-Piket">Non-Piket (Hanya Isya)</option>    
+                <option value="Sabtu">Piket Sabtu</option>    
+                <option value="Minggu">Piket Minggu</option>    
+                <option value="Senin">Piket Senin</option>    
+                <option value="Selasa">Piket Selasa</option>    
+                <option value="Rabu">Piket Rabu</option>    
+                <option value="Kamis">Piket Kamis</option>    
+            </select>    
+            <button onclick="tambahSantriBaru()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-2 rounded-xl shrink-0 transition cursor-pointer">Simpan</button>    
+        </div>    
+    </div>    
+
+    <!-- Daftar Santri Keluar / Hapus -->    
+    <div class="flex-1 overflow-hidden flex flex-col">    
+        <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">➖ Daftar Santri Aktif (Keluarkan Santri)</span>    
+        <div id="listKelolaSantriContainer" class="space-y-2 overflow-y-auto pr-1 flex-1"></div>    
+    </div>    
 </div>
 
-<div class="bg-slate-950/40 border border-emerald-950/30 rounded-2xl p-3.5 mb-5 space-y-2 text-[11px] text-slate-400">
-<div>🕌 <span class="font-semibold text-slate-300">Ketentuan Roster Piket (Ashar):</span><br>• Tidak Sholat / Tidak Sorogan: <span class="text-rose-400 font-bold">Rp3.000 / pelanggaran</span></div>
-<div class="border-t border-emerald-950/30 pt-2">⚠️ <span class="font-semibold text-slate-300">Ba'da Isya (Kelipatan 5 Pelanggaran):</span><br>• Wajib memilih sanksi: <span class="text-yellow-400 font-semibold">Denda Rp5.000</span> ATAU <span class="text-yellow-400 font-semibold">Hukum Botak 👩‍🦲</span>.</div>
-</div>
-
-<div id="panel-piket" class="space-y-5">
-<div>
-<label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📅 Hari Roster</label>
-<select id="daySelect" onchange="selectedDay=this.value;renderApp()" class="w-full bg-slate-950 border border-emerald-950/60 rounded-2xl p-3.5 text-sm text-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500"></select>
-<p id="tanggalHariIni" class="text-[10px] text-emerald-400 mt-2 font-semibold"></p>
-</div>
-<div class="border-t border-emerald-950/50"></div>
-<h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Daftar Santri Piket Hari Ini</h3>
-<div id="piketListContainer" class="space-y-4"></div>
-</div>
-
-<div id="panel-isya" class="hidden space-y-4">
-<div>
-<label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔍 Cari Nama Santri</label>
-<input type="text" id="searchInput" oninput="renderIsya()" placeholder="Ketik nama santri..." class="w-full bg-slate-950 border border-emerald-950/60 rounded-2xl p-3 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-</div>
-<div class="flex justify-between items-center px-1">
-<span class="text-xs font-bold uppercase tracking-wider text-slate-400">Kehadiran Pengajian Ba'da Isya</span>
-<span id="totalSantriBadge" class="text-[10px] bg-emerald-950 text-emerald-300 px-2.5 py-0.5 rounded-full font-medium">0 Santri</span>
-</div>
-<div id="isyaListContainer" class="space-y-4 max-h-[500px] overflow-y-auto pr-1"></div>
-</div>
-
-<div id="panel-denda" class="hidden space-y-4">
-<div class="flex justify-between items-center">
-<h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Denda & Sanksi Berjalan</h2>
-<span id="totalDendaBerjalanBadge" class="text-[10px] bg-rose-950/80 text-rose-300 px-2.5 py-0.5 rounded-full border border-rose-900/40 font-bold">0 Aktif</span>
-</div>
-<div class="grid grid-cols-2 gap-2 bg-slate-950 p-1 rounded-xl border border-emerald-950/40 text-xs font-bold">
-<button onclick="switchSubDenda('uang')" id="subtab-uang" class="py-2 rounded-lg bg-emerald-600 text-white">💵 Denda Uang</button>
-<button onclick="switchSubDenda('botak')" id="subtab-botak" class="py-2 rounded-lg text-slate-400">👩‍🦲 Sanksi Botak</button>
-</div>
-<div id="panel-denda-uang" class="space-y-3 max-h-[430px] overflow-y-auto pr-1"></div>
-<div id="panel-denda-botak" class="hidden space-y-3 max-h-[430px] overflow-y-auto pr-1"></div>
-</div>
-
-<div id="panel-rekap" class="hidden space-y-4">
-<div class="flex justify-between items-center">
-<div><h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Rincian & Pembayaran</h2><span class="text-[9px] text-slate-500">Laporan resmi kedisiplinan dan administrasi</span></div>
-<span class="text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded-md font-semibold">Live Update</span>
-</div>
-<div id="summaryContainer" class="space-y-3 max-h-[420px] overflow-y-auto pr-1"></div>
-<div class="bg-slate-950 p-4 rounded-2xl border border-emerald-950/60 space-y-2.5">
-<h4 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Statistik Akumulasi</h4>
-<div class="grid grid-cols-2 gap-3">
-<div class="bg-slate-900/50 p-2.5 rounded-xl border border-emerald-950/30"><span class="block text-[9px] text-slate-400">Total Denda</span><span id="statTotalDenda" class="text-sm font-bold text-rose-400">Rp0</span></div>
-<div class="bg-slate-900/50 p-2.5 rounded-xl border border-emerald-950/30"><span class="block text-[9px] text-slate-400">Total Dibayar</span><span id="statTotalBayar" class="text-sm font-bold text-emerald-400">Rp0</span></div>
-</div>
-</div>
-<button onclick="showResetModal()" class="w-full text-[10px] text-red-400/80 hover:text-red-400 py-2 border border-dashed border-red-950/45 rounded-xl">⚠️ Reset Semua Data Aplikasi</button>
-</div>
-</div>
-
-<div id="kelolaSantriModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all z-50">
-<div class="bg-slate-950 border border-emerald-900/40 w-full max-w-sm rounded-3xl p-5 space-y-4 max-h-[90vh] flex flex-col">
-<div class="flex justify-between items-center border-b border-emerald-950/60 pb-3"><h3 class="text-sm font-bold">⚙️ Manajemen Santri</h3><button onclick="closeKelolaSantriModal()" class="text-slate-400 text-lg">✕</button></div>
-<div class="bg-slate-900 p-3 rounded-2xl border border-emerald-950/30 space-y-2.5">
-<span class="block text-[10px] font-bold text-emerald-400 uppercase">➕ Tambah Santri Baru</span>
-<input type="text" id="namaSantriBaru" placeholder="Nama lengkap santri..." class="w-full bg-slate-950 border border-emerald-950/60 rounded-xl p-2.5 text-xs">
-<div class="flex gap-2">
-<select id="hariPiketSantriBaru" class="w-full bg-slate-950 border border-emerald-950/60 rounded-xl p-2 text-xs">
-<option value="Non-Piket">Non-Piket (Hanya Isya)</option><option value="Sabtu">Piket Sabtu</option><option value="Minggu">Piket Minggu</option><option value="Senin">Piket Senin</option><option value="Selasa">Piket Selasa</option><option value="Rabu">Piket Rabu</option><option value="Kamis">Piket Kamis</option>
-</select>
-<button onclick="tambahSantriBaru()" class="bg-emerald-600 text-white text-xs font-bold px-3 py-2 rounded-xl">Simpan</button>
-</div>
-</div>
-<div class="flex-1 overflow-hidden flex flex-col">
-<span class="block text-[10px] font-bold text-slate-400 uppercase mb-2">📋 Daftar Santri</span>
-<div id="listKelolaSantriContainer" class="space-y-2 overflow-y-auto pr-1 flex-1"></div>
-</div>
-</div>
-</div>
-
-<div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-800 text-slate-100 text-xs font-semibold px-4 py-3 rounded-2xl shadow-xl border border-emerald-950/60 flex items-center gap-2 translate-y-20 opacity-0 transition-all pointer-events-none z-50 w-[90%] max-w-xs text-center justify-center"><span id="toastIcon">✨</span><span id="toastMessage">Perubahan disimpan!</span></div>
-
-<div id="confirmModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none z-50">
-<div class="bg-slate-950 border border-red-900/30 w-full max-w-xs rounded-3xl p-6 text-center">
-<div class="w-12 h-12 bg-red-900/30 border border-red-800 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">⚠️</div>
-<h3 class="text-base font-bold mb-2">Reset Data Aplikasi?</h3>
-<p class="text-xs text-slate-400 mb-6">Data aplikasi akan dihapus. Data browser aplikasi lain tidak ikut terhapus.</p>
-<div class="grid grid-cols-2 gap-2"><button onclick="hideResetModal()" class="bg-slate-800 text-slate-300 font-semibold text-xs py-2.5 rounded-xl">Batal</button><button onclick="executeReset()" class="bg-red-600 text-white font-semibold text-xs py-2.5 rounded-xl">Ya, Reset</button></div>
-</div>
-</div>
-
-<script>
-/* =========================================================
-   DATA BAWAAN — DIPERTAHANKAN DARI KODE ANDA
-========================================================= */
-const jadwalBawaan={
-"Sabtu":["Sabil","Fatir","Hafid"],
-"Minggu":["Ale","Noval","Alif"],
-"Senin":["Ihab","Aswad","Adit"],
-"Selasa":["Rehan","Tohir"],
-"Rabu":["Maman","Samsul"],
-"Kamis":["Ikrom","Trisno","Aris"]
-};
-const santriTambahanBawaan=["Bagio","Syarif"];
-const TARIF={piket:3000,sanksiDenda:5000};
-const HARI=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-const STORAGE_KEY="almua_monitoring_v3";
-
-let activeTab="piket";
-let subTabDenda="uang";
-let selectedDay="";
-
-/* =========================================================
-   DATABASE BARU
-========================================================= */
-const defaultDB={
-santri:{},
-piket:{},
-isya:{},
-denda:[],
-sanksi:[],
-createdAt:new Date().toISOString()
-};
-
-let state=loadState();
-
-function clone(o){return JSON.parse(JSON.stringify(o));}
-
-function loadState(){
-try{
-const old=JSON.parse(localStorage.getItem(STORAGE_KEY));
-if(old && old.santri && old.piket && old.isya && old.denda && old.sanksi) return old;
-}catch(e){}
-return migrateOldData();
-}
-
-function migrateOldData(){
-const s=clone(defaultDB);
-Object.entries(jadwalBawaan).forEach(([hari,namaList])=>{
-namaList.forEach(n=>{
-s.santri[n]={nama:n,hari,aktif:true,asal:"bawaan"};
-});
-});
-santriTambahanBawaan.forEach(n=>{
-s.santri[n]={nama:n,hari:"Non-Piket",aktif:true,asal:"bawaan"};
-});
-
-/* Migrasi data lama denda_app bila memang ada */
-try{
-const oldDb=JSON.parse(localStorage.getItem("denda_app")||"{}");
-Object.entries(oldDb).forEach(([n,v])=>{
-if(!s.santri[n]) s.santri[n]={nama:n,hari:"Non-Piket",aktif:true,asal:"data-lama"};
-if(v.ja||v.so) s.piket.__legacy=s.piket.__legacy||{};
-if(v.ap||v.tp) s.isya.__legacy=s.isya.__legacy||{};
-});
-}catch(e){}
-
-saveState(s);
-return s;
-}
-
-function saveState(obj=state){
-localStorage.setItem(STORAGE_KEY,JSON.stringify(obj));
-}
-
-function esc(v){
-return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-}
-
-function todayKey(){
-const d=new Date();
-return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-}
-
-function todayName(){return HARI[new Date().getDay()];}
-
-function formatTanggal(key){
-if(!key)return"-";
-const [y,m,d]=key.split("-");
-return `${d}-${m}-${y}`;
-}
-
-function rupiah(n){return "Rp"+Number(n||0).toLocaleString("id-ID");}
-
-function semuaSantri(aktifOnly=false){
-return Object.values(state.santri)
-.filter(s=>!aktifOnly||s.aktif)
-.sort((a,b)=>a.nama.localeCompare(b.nama,"id"))
-.map(s=>s.nama);
-}
-
-function getSantri(n){return state.santri[n];}
-
-function ensureDayData(){
-const t=todayKey();
-if(!state.piket[t])state.piket[t]={};
-if(!state.isya[t])state.isya[t]={};
-}
-
-function handleLogoError(){
-const c=document.getElementById("logoContainer");
-if(c)c.innerHTML='<div class="w-full h-full bg-emerald-50 flex flex-col items-center justify-center text-emerald-800 font-bold p-1 text-center"><span class="text-[32px]">🕌</span><span class="text-[9px]">AL-MU&#039;AWANAH</span></div>';
-}
-
-/* =========================================================
-   HARI OTOMATIS
-========================================================= */
-function setHariOtomatis(){
-const select=document.getElementById("daySelect");
-if(!select)return;
-const hari=todayName();
-if(!selectedDay || selectedDay!==hari) selectedDay=hari;
-select.value=hari;
-document.getElementById("tanggalHariIni").textContent=
-`Hari ini: ${hari}, ${formatTanggal(todayKey())}`+
-(hari==="Jumat"?" — tidak ada roster bawaan":"");
-}
-
-/* =========================================================
-   PIKET
-========================================================= */
-function getPiketRecord(t,n){
-return state.piket[t]?.[n]||{sholat:0,sorogan:0};
-}
-
-function updatePiket(n,jenis,delta){
-const t=todayKey();
-ensureDayData();
-if(!state.piket[t][n])state.piket[t][n]={sholat:0,sorogan:0};
-const r=state.piket[t][n];
-r[jenis]=Math.max(0,(r[jenis]||0)+delta);
-r.updatedAt=new Date().toISOString();
-
-syncAutomaticDenda(n,t);
-saveState();
-renderApp();
-showToast(`${n}: data ${jenis==="sholat"?"sholat":"sorogan"} diperbarui`,"💾");
-}
-
-function syncAutomaticDenda(n,t){
-const r=getPiketRecord(t,n);
-["sholat","sorogan"].forEach(jenis=>{
-const source=`piket|${t}|${n}|${jenis}`;
-const existing=state.denda.find(x=>x.source===source);
-const jumlah=r[jenis]||0;
-if(jumlah>0 && !existing){
-state.denda.push({
-id:crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random(),
-nama:n,tanggal:t,jenis:`Piket - ${jenis==="sholat"?"Tidak Sholat":"Tidak Sorogan"}`,
-nominal:jumlah*TARIF.piket,dibayar:0,source,aktif:true,createdAt:new Date().toISOString()
-});
-}else if(existing){
-existing.nominal=jumlah*TARIF.piket;
-existing.aktif=existing.dibayar<existing.nominal;
-}
-});
-}
-
-function renderPiket(){
-setHariOtomatis();
-const day=document.getElementById("daySelect").value;
-const c=document.getElementById("piketListContainer");
-c.innerHTML="";
-if(day==="Jumat"){
-c.innerHTML='<div class="text-center py-8 text-slate-500 text-xs bg-slate-950/40 rounded-2xl">📅 Jumat tidak memiliki roster piket bawaan.</div>';
-return;
-}
-const daftar=Object.values(state.santri).filter(s=>s.aktif&&s.hari===day).sort((a,b)=>a.nama.localeCompare(b.nama,"id"));
-if(!daftar.length){
-c.innerHTML='<div class="text-center py-8 text-slate-500 text-xs bg-slate-950/40 rounded-2xl">Tidak ada santri piket pada hari ini.</div>';
-return;
-}
-const t=todayKey();
-daftar.forEach(s=>{
-const r=getPiketRecord(t,s.nama);
-const total=(r.sholat+r.sorogan)*TARIF.piket;
-const dibayar=state.denda.filter(x=>x.nama===s.nama&&x.aktif).reduce((a,x)=>a+Math.max(0,x.dibayar||0),0);
-c.innerHTML+=`
-<div class="bg-slate-950/70 p-4 rounded-2xl border border-emerald-950/30">
-<div class="flex justify-between items-center mb-3">
-<span class="font-extrabold text-slate-200 text-sm">${esc(s.nama)}</span>
-<span class="${total>0?"text-rose-400 bg-rose-950/30":"text-emerald-400 bg-emerald-950/30"} text-xs font-bold px-2.5 py-1 rounded-full">Hari ini: ${rupiah(total)}</span>
-</div>
-<div class="grid grid-cols-2 gap-2 mb-3 text-[10px] font-semibold">
-<button onclick="updatePiket('${esc(s.nama)}','sholat',1)" class="bg-slate-900 border border-emerald-950/30 py-2.5 px-2 rounded-xl flex justify-between">Tak Sholat <b class="text-rose-300">${r.sholat||0}x</b></button>
-<button onclick="updatePiket('${esc(s.nama)}','sorogan',1)" class="bg-slate-900 border border-emerald-950/30 py-2.5 px-2 rounded-xl flex justify-between">Tak Sorogan <b class="text-rose-300">${r.sorogan||0}x</b></button>
-</div>
-<div class="flex justify-end gap-3 text-[9px] text-slate-500 mb-3">
-<button onclick="updatePiket('${esc(s.nama)}','sholat',-1)">− Koreksi Sholat</button>
-<button onclick="updatePiket('${esc(s.nama)}','sorogan',-1)">− Koreksi Sorogan</button>
-</div>
-<div class="text-[9px] text-slate-500">Denda otomatis: ${rupiah(total)} ${dibayar?"| Pembayaran tercatat: "+rupiah(dibayar):""}</div>
-</div>`;
-});
-}
-
-/* =========================================================
-   ISYA
-========================================================= */
-function getIsyaRecord(t,n){return state.isya[t]?.[n]||{alpa:0,terlambat:0};}
-
-function updateIsya(n,jenis,delta){
-const t=todayKey();
-ensureDayData();
-if(!state.isya[t][n])state.isya[t][n]={alpa:0,terlambat:0};
-state.isya[t][n][jenis]=Math.max(0,(state.isya[t][n][jenis]||0)+delta);
-state.isya[t][n].updatedAt=new Date().toISOString();
-syncIsyaSanction(n);
-saveState();
-renderIsya();
-renderDenda();
-updateBadge();
-showToast(`Absensi Isya ${n} diperbarui`,"📝");
-}
-
-function totalIsya(n){
-let total=0;
-Object.values(state.isya).forEach(day=>{
-const r=day[n];
-if(r)total+=(r.alpa||0)+(r.terlambat||0);
-});
-return total;
-}
-
-function milestoneTerpenuhi(n){return Math.floor(totalIsya(n)/5);}
-
-function syncIsyaSanction(n){
-const target=milestoneTerpenuhi(n);
-for(let i=1;i<=target;i++){
-const source=`isya|${n}|milestone|${i}`;
-if(!state.sanksi.some(x=>x.source===source)){
-state.sanksi.push({
-id:crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random(),
-nama:n,milestone:i,source,status:"pending",pilihan:null,tanggal:new Date().toISOString(),aktif:true
-});
-}
-}
-}
-
-function renderIsya(){
-const search=(document.getElementById("searchInput").value||"").toLowerCase();
-const c=document.getElementById("isyaListContainer");
-c.innerHTML="";
-const list=semuaSantri(true).filter(n=>!search||n.toLowerCase().includes(search));
-document.getElementById("totalSantriBadge").textContent=`${list.length} Santri`;
-if(!list.length){c.innerHTML='<div class="text-center py-8 text-slate-500 text-xs">Santri tidak ditemukan.</div>';return;}
-list.forEach(n=>{
-syncIsyaSanction(n);
-const r=getIsyaRecord(todayKey(),n);
-const total=totalIsya(n);
-const pending=state.sanksi.filter(x=>x.nama===n&&x.status==="pending"&&x.aktif);
-c.innerHTML+=`
-<div class="bg-slate-950/60 p-3.5 rounded-2xl border ${pending.length?"border-red-900/40":"border-emerald-900/10"}">
-<div class="flex justify-between items-start">
-<div><span class="font-bold text-slate-100 text-xs">${esc(n)}</span>
-<span class="block text-[9px] text-slate-400 mt-1">Total pelanggaran Isya: <b class="text-emerald-400">${total}x</b></span></div>
-<div class="text-[9px] text-right"><span class="text-rose-300">Alpa ${r.alpa||0}x</span><br><span class="text-amber-300">Terlambat ${r.terlambat||0}x</span></div>
-</div>
-<div class="grid grid-cols-2 gap-2 mt-3 text-[10px]">
-<div class="flex justify-between items-center bg-slate-900 rounded-xl overflow-hidden"><span class="pl-2 text-rose-300">Alpa</span><span><button onclick="updateIsya('${esc(n)}','alpa',-1)" class="px-2 py-1.5">−</button><button onclick="updateIsya('${esc(n)}','alpa',1)" class="px-3 py-1.5 bg-rose-900/40">+</button></span></div>
-<div class="flex justify-between items-center bg-slate-900 rounded-xl overflow-hidden"><span class="pl-2 text-amber-300">Terlambat</span><span><button onclick="updateIsya('${esc(n)}','terlambat',-1)" class="px-2 py-1.5">−</button><button onclick="updateIsya('${esc(n)}','terlambat',1)" class="px-3 py-1.5 bg-amber-900/40">+</button></span></div>
-</div>
-${pending.length?`<div class="mt-3 bg-red-950/35 border border-red-900/45 rounded-xl p-2.5 text-center"><span class="block text-[10px] font-bold text-red-300 mb-2">🚨 ${pending.length} Sanksi Belum Dipilih</span><div class="space-y-1.5">${pending.map(x=>`<div class="grid grid-cols-2 gap-1.5"><button onclick="pilihSanksi('${x.id}','denda')" class="bg-red-900 text-white text-[9px] font-bold py-1.5 rounded-lg">Denda Rp5.000</button><button onclick="pilihSanksi('${x.id}','botak')" class="bg-amber-500 text-slate-950 text-[9px] font-black py-1.5 rounded-lg">Hukum Botak 👩‍🦲</button></div>`).join("")}</div></div>`:""}
-</div>`;
-});
-}
-
-function pilihSanksi(id,tipe){
-const x=state.sanksi.find(a=>a.id===id);
-if(!x||x.status!=="pending")return;
-x.pilihan=tipe;x.status="aktif";
-if(tipe==="denda"){
-state.denda.push({
-id:crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random(),
-nama:x.nama,tanggal:todayKey(),jenis:`Sanksi Isya kelipatan ${x.milestone*5}`,
-nominal:TARIF.sanksiDenda,dibayar:0,source:x.source,aktif:true,createdAt:new Date().toISOString()
-});
-}else{
-/* Sanksi botak tetap tercatat sebagai sanksi, tidak dihapus saat selesai */
-}
-saveState();renderIsya();renderDenda();updateBadge();
-showToast(tipe==="denda"?`${x.nama}: denda Rp5.000 dibuat`:`${x.nama}: sanksi botak dicatat`,"⚠️");
-}
-
-/* =========================================================
-   DENDA
-========================================================= */
-function semuaDendaAktif(){
-return state.denda.filter(x=>x.aktif&&((x.nominal||0)-(x.dibayar||0)>0));
-}
-
-function bayarDenda(id,inputId){
-const x=state.denda.find(a=>a.id===id);
-const input=document.getElementById(inputId);
-const val=Number(input?.value||0);
-if(!x||!val||val<=0)return;
-const sisa=Math.max(0,x.nominal-(x.dibayar||0));
-x.dibayar=Math.min(x.nominal,(x.dibayar||0)+val);
-x.aktif=x.dibayar<x.nominal;
-saveState();renderApp();
-showToast(`Pembayaran ${rupiah(Math.min(val,sisa))} disimpan`,"💵");
-}
-
-function selesaikanBotak(id){
-const x=state.sanksi.find(a=>a.id===id);
-if(!x)return;
-x.status="selesai";x.selesaiTanggal=todayKey();x.aktif=false;
-saveState();renderDenda();renderIsya();updateBadge();
-showToast(`${x.nama}: sanksi botak selesai`,"✂️");
-}
-
-function renderDenda(){
-const uang=document.getElementById("panel-denda-uang");
-const botak=document.getElementById("panel-denda-botak");
-uang.innerHTML="";botak.innerHTML="";
-const list=semuaDendaAktif();
-if(!list.length)uang.innerHTML='<div class="text-center py-8 text-slate-500 text-xs">🎉 Tidak ada denda uang yang berjalan.</div>';
-list.forEach((x,i)=>{
-const sisa=x.nominal-(x.dibayar||0);
-const iid=`bayar_${i}`;
-uang.innerHTML+=`<div class="bg-slate-950/80 p-3.5 rounded-2xl border border-rose-900/30 text-xs">
-<div class="flex justify-between gap-2"><span class="font-bold text-slate-200">${esc(x.nama)}</span><span class="text-rose-400 font-extrabold">${rupiah(sisa)}</span></div>
-<div class="text-[10px] text-slate-400 bg-slate-900/60 p-2 rounded-xl mt-2">📅 ${formatTanggal(x.tanggal)}<br>📌 ${esc(x.jenis)}<br>💰 Total ${rupiah(x.nominal)} • Dibayar ${rupiah(x.dibayar||0)}</div>
-<div class="flex gap-2 mt-2"><input id="${iid}" type="number" min="1" max="${sisa}" placeholder="Bayar Rp..." class="w-full bg-slate-900 border border-emerald-950/50 rounded-xl px-2.5 py-1.5 text-xs"><button onclick="bayarDenda('${x.id}','${iid}')" class="bg-emerald-600 text-white font-bold px-3 rounded-xl text-xs">Bayar</button></div>
-</div>`;
-});
-const botakList=state.sanksi.filter(x=>x.pilihan==="botak"&&x.status==="aktif");
-if(!botakList.length)botak.innerHTML='<div class="text-center py-8 text-slate-500 text-xs">✨ Tidak ada sanksi botak aktif.</div>';
-botakList.forEach(x=>{
-botak.innerHTML+=`<div class="bg-slate-950/80 p-3.5 rounded-2xl border border-amber-900/30 flex justify-between items-center"><div><b class="text-xs">${esc(x.nama)}</b><span class="block text-[10px] text-amber-400">👩‍🦲 Kelipatan ${x.milestone*5} pelanggaran Isya</span></div><button onclick="selesaikanBotak('${x.id}')" class="bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-[10px]">Selesai ✓</button></div>`;
-});
-const aktif=list.length+botakList.length;
-document.getElementById("totalDendaBerjalanBadge").textContent=`${aktif} Aktif`;
-}
-
-function updateBadge(){
-const n=semuaDendaAktif().length+state.sanksi.filter(x=>x.pilihan==="botak"&&x.status==="aktif").length+state.sanksi.filter(x=>x.status==="pending"&&x.aktif).length;
-const b=document.getElementById("badgeDendaAktif");
-b.textContent=n;b.classList.toggle("hidden",n===0);b.classList.toggle("flex",n>0);
-}
-
-/* =========================================================
-   REKAP
-========================================================= */
-function rekapSantri(n){
-let totalPiket=0,totalIsya=0;
-Object.values(state.piket).forEach(day=>{const r=day[n];if(r)totalPiket+=(r.sholat+r.sorogan);});
-Object.values(state.isya).forEach(day=>{const r=day[n];if(r)totalIsya+=(r.alpa+r.terlambat);});
-const denda=state.denda.filter(x=>x.nama===n);
-const total=denda.reduce((a,x)=>a+(x.nominal||0),0);
-const bayar=denda.reduce((a,x)=>a+(x.dibayar||0),0);
-const botak=state.sanksi.filter(x=>x.nama===n&&x.pilihan==="botak").length;
-return {totalPiket,totalIsya,total,bayar,sisa:Math.max(0,total-bayar),botak};
-}
-
-function renderRekap(){
-const c=document.getElementById("summaryContainer");c.innerHTML="";
-let total=0,bayar=0;
-semuaSantri(true).forEach(n=>{
-const r=rekapSantri(n);total+=r.total;bayar+=r.bayar;
-if(r.total||r.bayar||r.botak||r.totalPiket||r.totalIsya){
-c.innerHTML+=`<div class="bg-slate-950/70 p-3.5 rounded-2xl border border-emerald-950/40 text-xs">
-<div class="flex justify-between"><b>${esc(n)}</b><span class="${r.sisa?"text-rose-400":"text-emerald-400"}">Sisa ${rupiah(r.sisa)}</span></div>
-<div class="grid grid-cols-2 gap-1 text-[9px] text-slate-400 mt-2">
-<span>Piket: ${r.totalPiket} pelanggaran</span><span>Isya: ${r.totalIsya} pelanggaran</span><span>Total denda: ${rupiah(r.total)}</span><span>Dibayar: ${rupiah(r.bayar)}</span><span>Botak: ${r.botak}x</span>
-</div>
-<button onclick="bagikanLaporan('${esc(n)}')" class="w-full mt-3 bg-emerald-600 text-white text-[10px] font-bold py-2 rounded-xl">💬 Kirim Rekap ${esc(n)} ke WhatsApp</button>
-</div>`;
-}
-});
-if(!c.innerHTML)c.innerHTML='<div class="text-center py-8 text-slate-500 text-xs">Belum ada riwayat pelanggaran/denda.</div>';
-document.getElementById("statTotalDenda").textContent=rupiah(total);
-document.getElementById("statTotalBayar").textContent=rupiah(bayar);
-}
-
-function bagikanLaporan(n){
-const r=rekapSantri(n);
-const teks=`*LAPORAN KEDISIPLINAN SANTRI*
-*PONDOK PESANTREN AL-MU'AWANAH SUKAMANDI*
-
-_Assalamu'alaikum Wr. Wb._
-
-Yth. Bapak/Ibu Wali Santri dari *${n}*,
-
-Berikut rekap kedisiplinan ananda:
-
-*Piket Ashar*
-• Pelanggaran: ${r.totalPiket}x
-• Denda: ${rupiah(r.totalPiket*TARIF.piket)}
-
-*Pengajian Ba'da Isya'*
-• Pelanggaran: ${r.totalIsya}x
-
-*Administrasi*
-• Total denda: *${rupiah(r.total)}*
-• Telah dibayar: *${rupiah(r.bayar)}*
-• Sisa denda: *${rupiah(r.sisa)}*
-• Sanksi botak: ${r.botak}x
-
-_Wassalamu'alaikum Wr. Wb._`;
-window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(teks)}`,"_blank");
-}
-
-/* =========================================================
-   KELOLA SANTRI — TIDAK MENGHAPUS RIWAYAT
-========================================================= */
-function openKelolaSantriModal(){
-renderKelolaSantriList();
-const m=document.getElementById("kelolaSantriModal");
-m.classList.remove("pointer-events-none","opacity-0");
-}
-function closeKelolaSantriModal(){
-const m=document.getElementById("kelolaSantriModal");
-m.classList.add("pointer-events-none","opacity-0");
-}
-
-function renderKelolaSantriList(){
-const c=document.getElementById("listKelolaSantriContainer");c.innerHTML="";
-Object.values(state.santri).sort((a,b)=>a.nama.localeCompare(b.nama,"id")).forEach(s=>{
-c.innerHTML+=`<div class="bg-slate-900 p-2.5 rounded-xl border border-emerald-950/30 flex justify-between items-center text-xs ${s.aktif?"":"opacity-60"}">
-<div><b class="block">${esc(s.nama)}</b><span class="text-[9px] ${s.aktif?"text-emerald-400":"text-slate-500"}">${esc(s.hari)} • ${s.aktif?"Aktif":"Tidak aktif"}</span></div>
-<button onclick="toggleSantri('${esc(s.nama)}')" class="${s.aktif?"bg-rose-950/60 text-rose-300":"bg-emerald-950 text-emerald-300"} border border-emerald-900/50 text-[10px] px-2.5 py-1 rounded-lg">${s.aktif?"Keluarkan":"Aktifkan"}</button>
-</div>`;
-});
-}
-
-function tambahSantriBaru(){
-const input=document.getElementById("namaSantriBaru");
-const nama=input.value.trim();
-const hari=document.getElementById("hariPiketSantriBaru").value;
-if(!nama)return alert("Masukkan nama santri!");
-if(state.santri[nama])return alert("Nama santri sudah ada!");
-state.santri[nama]={nama,hari,aktif:true,asal:"tambahan"};
-saveState();input.value="";renderKelolaSantriList();renderApp();
-showToast(`${nama} berhasil ditambahkan`,"🎉");
-}
-
-function toggleSantri(n){
-if(!state.santri[n])return;
-state.santri[n].aktif=!state.santri[n].aktif;
-saveState();renderKelolaSantriList();renderApp();
-showToast(`${n}: ${state.santri[n].aktif?"diaktifkan":"dinonaktifkan"}`,"🔄");
-}
-
-/* =========================================================
-   UI
-========================================================= */
-function switchTab(tab){
-activeTab=tab;
-["piket","isya","denda","rekap"].forEach(t=>{
-const b=document.getElementById("tab-"+t),p=document.getElementById("panel-"+t);
-if(t===tab){b.className="tab-active";p.classList.remove("hidden");}
-else{b.className="tab-normal";p.classList.add("hidden");}
-});
-renderApp();
-}
-
-function switchSubDenda(sub){
-subTabDenda=sub;
-document.getElementById("panel-denda-uang").classList.toggle("hidden",sub!=="uang");
-document.getElementById("panel-denda-botak").classList.toggle("hidden",sub!=="botak");
-document.getElementById("subtab-uang").className=sub==="uang"?"py-2 rounded-lg bg-emerald-600 text-white":"py-2 rounded-lg text-slate-400";
-document.getElementById("subtab-botak").className=sub==="botak"?"py-2 rounded-lg bg-amber-600 text-slate-950":"py-2 rounded-lg text-slate-400";
-}
-
-function renderApp(){
-ensureDayData();
-renderPiket();
-renderIsya();
-renderDenda();
-renderRekap();
-updateBadge();
-switchSubDenda(subTabDenda);
-}
-
-function showToast(msg,icon="✨"){
-const t=document.getElementById("toast");
-document.getElementById("toastIcon").textContent=icon;
-document.getElementById("toastMessage").textContent=msg;
-t.classList.remove("translate-y-20","opacity-0");t.classList.add("translate-y-0","opacity-100");
-clearTimeout(window.__toastTimer);
-window.__toastTimer=setTimeout(()=>{t.classList.add("translate-y-20","opacity-0");t.classList.remove("translate-y-0","opacity-100")},2300);
-}
-
-function showResetModal(){document.getElementById("confirmModal").classList.remove("pointer-events-none","opacity-0")}
-function hideResetModal(){document.getElementById("confirmModal").classList.add("pointer-events-none","opacity-0")}
-function executeReset(){localStorage.removeItem(STORAGE_KEY);location.reload()}
-
-const style=document.createElement("style");
-style.textContent=`
-.tab-active{font-size:11px;font-weight:700;padding:.625rem;border-radius:.75rem;background:#059669;color:white;box-shadow:0 10px 20px rgba(2,44,34,.5);text-align:center}
-.tab-normal{font-size:11px;font-weight:700;padding:.625rem;border-radius:.75rem;color:#94a3b8;text-align:center}
-.tab-normal:hover{color:#6ee7b7}
-`;
-document.head.appendChild(style);
-
-/* Inisialisasi */
-(function init(){
-const sel=document.getElementById("daySelect");
-["Sabtu","Minggu","Senin","Selasa","Rabu","Kamis","Jumat"].forEach(h=>{
-const o=document.createElement("option");o.value=h;o.textContent=h;sel.appendChild(o);
-});
-setHariOtomatis();
-renderApp();
-/* Memeriksa pergantian hari otomatis */
-let last=todayKey();
-setInterval(()=>{
-const now=todayKey();
-if(now!==last){last=now;selectedDay="";renderApp();showToast("Hari berganti. Piket otomatis mengikuti hari baru.","📅");}
-},30000);
-})();
-</script>
-</body>
-</html>
+</div>    <!-- NOTIFIKASI TOAST -->    <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-850 text-slate-100 text-xs font-semibold px-4 py-3 rounded-2xl shadow-xl border border-emerald-950/60 flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none z-50 w-[90%] max-w-xs text-center justify-center">    
+    <span id="toastIcon">✨</span>    
+    <span id="toastMessage">Perubahan disimpan!</span>    
+</div>    <!-- MODAL KONFIRMASI RESET -->    <div id="confirmModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300 z-50">    
+    <div class="bg-slate-950 border border-emerald-900/30 w-full max-w-xs rounded-3xl p-6 text-center transform scale-95 transition-all duration-300">    
+        <div class="w-12 h-12 bg-red-900/30 border border-red-800 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">⚠️</div>    
+        <h3 class="text-base font-bold text-slate-100 mb-2">Hapus Semua Data?</h3>    
+        <p class="text-xs text-slate-400 mb-6">Tindakan ini akan menghapus semua riwayat absen, denda, dan daftar santri secara permanen.</p>    
+        <div class="grid grid-cols-2 gap-2">    
+            <button onclick="hideResetModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs py-2.5 px-4 rounded-xl cursor-pointer">Batal</button>    
+            <button onclick="executeReset()" class="bg-red-600 hover:bg-red-500 text-white font-semibold text-xs py-2.5 px-4 rounded-xl shadow-lg cursor-pointer">Ya, Reset</button>    
+        </div>    
+    </div>    
+</div>    <script>    
+    // Roster Bawaan Pesantren    
+    const jadwalBawaan = {    
+        "Sabtu": ["Sabil", "Fatir", "Hafid"],    
+        "Minggu": ["Ale", "Noval", "Alif"],    
+        "Senin": ["Ihab", "Aswad", "Adit"],    
+        "Selasa": ["Rehan", "Tohir"],    
+        "Rabu": ["Maman", "Samsul"],    
+        "Kamis": ["Ikrom", "Trisno", "Aris"]    
+    };    
+    const santriTambahanBawaan = ["Bagio", "Syarif"];    
+  
+    const TARIF = { piket: 3000, sanksiDenda: 5000 };    
+  
+    let activeTab = 'piket';    
+    let subTabDenda = 'uang';    
+  
+    // Load / Inisialisasi Database    
+    let jadwal = JSON.parse(localStorage.getItem('jadwal_app')) || jadwalBawaan;    
+    let santriTambahan = JSON.parse(localStorage.getItem('santri_tambahan_app')) || santriTambahanBawaan;    
+    let db = JSON.parse(localStorage.getItem('denda_app')) || {};    
+  
+    function dapatkanSemuaSantri() {    
+        return [...Object.values(jadwal).flat(), ...santriTambahan].sort();    
+    }    
+  
+    // Migrasi & Pemastian Struktur Data Lama Tetap Aman    
+    function sinkronisasiDatabase() {    
+        const listSemua = dapatkanSemuaSantri();    
+        listSemua.forEach(n => {    
+            if (!db[n]) db[n] = { ja: 0, so: 0, di: 0, ap: 0, tp: 0, sd: 0, bt: 0 };    
+            else {    
+                if (db[n].ap === undefined) db[n].ap = 0;    
+                if (db[n].tp === undefined) db[n].tp = 0;    
+                if (db[n].di === undefined) db[n].di = 0;    
+                if (db[n].ja === undefined) db[n].ja = 0;    
+                if (db[n].so === undefined) db[n].so = 0;    
+                if (db[n].sd === undefined) db[n].sd = 0;    
+                if (db[n].bt === undefined) db[n].bt = 0;    
+            }    
+        });    
+        save();    
+    }    
+    sinkronisasiDatabase();    
+  
+    function save() {    
+        localStorage.setItem('denda_app', JSON.stringify(db));    
+        localStorage.setItem('jadwal_app', JSON.stringify(jadwal));    
+        localStorage.setItem('santri_tambahan_app', JSON.stringify(santriTambahan));    
+    }    
+  
+    function handleLogoError() {    
+        const container = document.getElementById('logoContainer');    
+        if (container) {    
+            container.innerHTML = `    
+                <div class="w-full h-full bg-emerald-50 flex flex-col items-center justify-center text-emerald-800 font-bold p-1 text-center">    
+                    <span class="text-[32px] leading-none mb-0.5">🕌</span>    
+                    <span class="text-[9px] tracking-tight leading-none">AL-MU'AWANAH</span>    
+                </div>    
+            `;    
+        }    
+    }    
+  
+    function switchTab(tabId) {    
+        activeTab = tabId;    
+        ['piket', 'isya', 'denda', 'rekap'].forEach(t => {    
+            const btn = document.getElementById(`tab-${t}`);    
+            const panel = document.getElementById(`panel-${t}`);    
+            if (t === tabId) {    
+                btn.className = "text-[11px] font-bold py-2.5 rounded-xl transition-all duration-200 bg-emerald-600 text-white shadow-lg shadow-emerald-950/50 cursor-pointer text-center relative";    
+                panel.classList.remove('hidden');    
+            } else {    
+                btn.className = "text-[11px] font-bold py-2.5 rounded-xl transition-all duration-200 text-slate-400 hover:text-emerald-300 cursor-pointer text-center relative";    
+                panel.classList.add('hidden');    
+            }    
+        });    
+        renderApp();    
+    }    
+  
+    function switchSubDenda(sub) {    
+        subTabDenda = sub;    
+        const btnUang = document.getElementById('subtab-uang');    
+        const btnBotak = document.getElementById('subtab-botak');    
+        const panelUang = document.getElementById('panel-denda-uang');    
+        const panelBotak = document.getElementById('panel-denda-botak');    
+  
+        if (sub === 'uang') {    
+            btnUang.className = "py-2 rounded-lg bg-emerald-600 text-white cursor-pointer";    
+            btnBotak.className = "py-2 rounded-lg text-slate-400 hover:text-white cursor-pointer";    
+            panelUang.classList.remove('hidden');    
+            panelBotak.classList.add('hidden');    
+        } else {    
+            btnBotak.className = "py-2 rounded-lg bg-amber-600 text-slate-950 cursor-pointer";    
+            btnUang.className = "py-2 rounded-lg text-slate-400 hover:text-white cursor-pointer";    
+            panelBotak.classList.remove('hidden');    
+            panelUang.classList.add('hidden');    
+        }    
+    }    
+  
+    function hitungTotalDendaSantri(n) {    
+        return (db[n].ja * TARIF.piket) + (db[n].so * TARIF.piket) + (db[n].sd || 0);    
+    }    
+  
+    function hitungSisaDendaSantri(n) {    
+        return hitungTotalDendaSantri(n) - db[n].di;    
+    }    
+  
+    function dapatkanStatusSanksiIsya(n) {    
+        const totalPelanggaranIsya = db[n].ap + db[n].tp;    
+        const totalSanksiHarus = Math.floor(totalPelanggaranIsya / 5);    
+        const sanksiDendaDiselesaikan = Math.floor((db[n].sd || 0) / TARIF.sanksiDenda);    
+        const sanksiBotakDiselesaikan = db[n].bt || 0;    
+        const totalSanksiSelesai = sanksiDendaDiselesaikan + sanksiBotakDiselesaikan;    
+            
+        return {    
+            totalPelanggaran: totalPelanggaranIsya,    
+            totalSanksiHarus: totalSanksiHarus,    
+            sanksiTersisa: Math.max(0, totalSanksiHarus - totalSanksiSelesai)    
+        };    
+    }    
+  
+    function renderApp() {    
+        const listSemua = dapatkanSemuaSantri();    
+        const day = document.getElementById('daySelect').value;    
+  
+        // --- TAB 1: PIKET ---    
+        const piketContainer = document.getElementById('piketListContainer');    
+        piketContainer.innerHTML = '';    
+        if (jadwal[day]) {    
+            jadwal[day].forEach(n => {    
+                const sisa = hitungSisaDendaSantri(n);    
+                piketContainer.innerHTML += `    
+                    <div class="bg-slate-950/70 p-4 rounded-2xl border border-emerald-950/30">    
+                        <div class="flex justify-between items-center mb-3">    
+                            <span class="font-extrabold text-slate-200 text-sm tracking-wide">${n}</span>    
+                            <span class="text-xs font-bold ${sisa > 0 ? 'text-rose-400 bg-rose-950/30' : 'text-emerald-400 bg-emerald-950/30'} px-2.5 py-1 rounded-full border border-emerald-950/50">    
+                                Sisa: Rp${sisa.toLocaleString('id-ID')}    
+                            </span>    
+                        </div>    
+                        <div class="grid grid-cols-2 gap-2 mb-3 text-[10px] font-semibold">    
+                            <button onclick="updatePiket('${n}','ja',1)" class="bg-slate-900 border border-emerald-950/30 hover:bg-rose-950/30 py-2.5 px-2 rounded-xl text-left flex justify-between items-center transition cursor-pointer">    
+                                <span class="text-slate-300">Tak Jama'ah</span>    
+                                <span class="bg-rose-900/50 text-rose-300 px-1.5 py-0.5 rounded text-[9px] font-bold">${db[n].ja}x</span>    
+                            </button>    
+                            <button onclick="updatePiket('${n}','so',1)" class="bg-slate-900 border border-emerald-950/30 hover:bg-rose-950/30 py-2.5 px-2 rounded-xl text-left flex justify-between items-center transition cursor-pointer">    
+                                <span class="text-slate-300">Tak Sorogan</span>    
+                                <span class="bg-rose-900/50 text-rose-300 px-1.5 py-0.5 rounded text-[9px] font-bold">${db[n].so}x</span>    
+                            </button>    
+                        </div>    
+                        <div class="flex justify-end gap-3 mb-3 text-[9px] text-slate-500 font-medium">    
+                            <button onclick="updatePiket('${n}','ja',-1)" class="hover:text-rose-400 transition cursor-pointer">- Koreksi Sholat</button>    
+                            <button onclick="updatePiket('${n}','so',-1)" class="hover:text-rose-400 transition cursor-pointer">- Koreksi Sorogan</button>    
+                        </div>    
+                        <div class="flex gap-2">    
+                            <input type="number" id="pay_${n}" class="w-full bg-slate-950 border border-emerald-950/40 rounded-xl px-3 py-1.5 text-xs text-slate-100 placeholder-slate-600 focus:outline-none" placeholder="Rp Bayar denda...">    
+                            <button onclick="bayarDenda('${n}')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-1.5 rounded-xl text-xs shadow-md transition cursor-pointer">Bayar</button>    
+                        </div>    
+                    </div>    
+                `;    
+            });    
+        }    
+  
+        // --- TAB 2: ISYA ---    
+        const searchVal = document.getElementById('searchInput').value.toLowerCase();    
+        const isyaContainer = document.getElementById('isyaListContainer');    
+        isyaContainer.innerHTML = '';    
+        let countMatched = 0;    
+  
+        listSemua.forEach(n => {    
+            if (searchVal && !n.toLowerCase().includes(searchVal)) return;    
+            countMatched++;    
+            const sanksiInfo = dapatkanStatusSanksiIsya(n);    
+            const isTambahan = santriTambahan.includes(n);    
+  
+            let panelSanksiHTML = '';    
+            if (sanksiInfo.sanksiTersisa > 0) {    
+                panelSanksiHTML = `    
+                    <div class="mt-3 bg-red-950/35 border border-red-900/45 rounded-xl p-2.5 text-center">    
+                        <span class="block text-[10px] font-bold text-red-300 uppercase tracking-wide mb-1.5 animate-pulse">    
+                            🚨 Sanksi Isya (${sanksiInfo.sanksiTersisa}x Belum Dipilih)    
+                        </span>    
+                        <div class="grid grid-cols-2 gap-1.5">    
+                            <button onclick="eksekusiSanksi('${n}', 'denda')" class="bg-red-900 hover:bg-red-800 text-white text-[9px] font-bold py-1.5 px-2 rounded-lg transition cursor-pointer">Denda Rp5.000</button>    
+                            <button onclick="eksekusiSanksi('${n}', 'botak')" class="bg-amber-600 hover:bg-amber-500 text-slate-950 text-[9px] font-black py-1.5 px-2 rounded-lg transition cursor-pointer">Hukum Botak 👩‍🦲</button>    
+                        </div>    
+                    </div>    
+                `;    
+            }    
+  
+            isyaContainer.innerHTML += `    
+                <div class="bg-slate-950/60 p-3.5 rounded-2xl border ${sanksiInfo.sanksiTersisa > 0 ? 'border-red-900/40' : 'border-emerald-900/10'} flex flex-col justify-between gap-1">    
+                    <div class="flex justify-between items-start">    
+                        <div>    
+                            <div class="flex items-center gap-1.5 flex-wrap">    
+                                <span class="font-bold text-slate-100 text-xs">${n}</span>    
+                                ${isTambahan ? '<span class="text-[8px] bg-emerald-950 text-emerald-300 border border-emerald-900/50 px-1.5 py-0.2 rounded font-medium">Non-piket</span>' : ''}    
+                                ${db[n].bt > 0 ? `<span class="text-[8px] bg-slate-900 text-amber-400 border border-amber-900/30 px-1 py-0.2 rounded flex items-center gap-0.5 font-bold">👩‍🦲 Botak ${db[n].bt}x</span>` : ''}    
+                            </div>    
+                            <span class="block text-[9px] text-slate-400 mt-1">Sanksi Denda Aktif: Rp${(db[n].sd || 0).toLocaleString('id-ID')}</span>    
+                        </div>    
+                        <div class="flex flex-col items-end gap-1 text-[9px]">    
+                            <span class="text-slate-400">Pelanggaran Isya: <strong class="text-emerald-400 font-bold">${sanksiInfo.totalPelanggaran}x</strong></span>    
+                            <div class="flex gap-1">    
+                                <span class="bg-rose-950/50 text-rose-300 px-1.5 py-0.2 rounded border border-rose-900/20">Alpa: ${db[n].ap}</span>    
+                                <span class="bg-amber-950/50 text-amber-300 px-1.5 py-0.2 rounded border border-amber-900/20">Late: ${db[n].tp}</span>    
+                            </div>    
+                        </div>    
+                    </div>    
+  
+                    <div class="grid grid-cols-2 gap-2 text-[10px] font-semibold mt-2">    
+                        <div class="flex items-center bg-slate-900 border border-emerald-950/35 rounded-xl overflow-hidden justify-between">    
+                            <span class="pl-2 text-rose-300 text-[9px]">Alpa (Absen)</span>    
+                            <div class="flex">    
+                                <button onclick="updateIsya('${n}', 'ap', -1)" class="px-2.5 py-1.5 hover:bg-slate-800 text-slate-400 cursor-pointer">-</button>    
+                                <button onclick="updateIsya('${n}', 'ap', 1)" class="px-3 py-1.5 bg-rose-900/40 hover:bg-rose-900/60 text-rose-200 border-l border-rose-900/25 cursor-pointer">+</button>    
+                            </div>    
+                        </div>    
+                        <div class="flex items-center bg-slate-900 border border-emerald-950/35 rounded-xl overflow-hidden justify-between">    
+                            <span class="pl-2 text-amber-300 text-[9px]">Terlambat</span>    
+                            <div class="flex">    
+                                <button onclick="updateIsya('${n}', 'tp', -1)" class="px-2.5 py-1.5 hover:bg-slate-800 text-slate-400 cursor-pointer">-</button>    
+                                <button onclick="updateIsya('${n}', 'tp', 1)" class="px-3 py-1.5 bg-amber-900/40 hover:bg-amber-900/60 text-amber-200 border-l border-amber-900/25 cursor-pointer">+</button>    
+                            </div>    
+                        </div>    
+                    </div>    
+                    ${panelSanksiHTML}    
+                </div>    
+            `;    
+        });    
+        document.getElementById('totalSantriBadge').innerText = `${countMatched} Santri`;    
+  
+        // --- TAB 3: DENDA BERJALAN ---    
+        const panelDendaUang = document.getElementById('panel-denda-uang');    
+        const panelDendaBotak = document.getElementById('panel-denda-botak');    
+        panelDendaUang.innerHTML = '';    
+        panelDendaBotak.innerHTML = '';    
+  
+        let jumlahDendaUangAktif = 0;    
+        let jumlahSanksiBotakAktif = 0;    
+  
+        listSemua.forEach(n => {    
+            const sisaDenda = hitungSisaDendaSantri(n);    
+            if (sisaDenda > 0) {    
+                jumlahDendaUangAktif++;    
+                panelDendaUang.innerHTML += `    
+                    <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-rose-900/30 flex flex-col gap-2 text-xs">    
+                        <div class="flex justify-between items-center">    
+                            <span class="font-bold text-slate-200">${n}</span>    
+                            <span class="text-rose-400 font-extrabold">Sisa: Rp${sisaDenda.toLocaleString('id-ID')}</span>    
+                        </div>    
+                        <div class="text-[10px] text-slate-400 bg-slate-900/60 p-2 rounded-xl space-y-1">    
+                            <div class="flex justify-between"><span>Piket Ashar (Sholat/Sorogan):</span><span>Rp${((db[n].ja + db[n].so)*3000).toLocaleString('id-ID')}</span></div>    
+                            <div class="flex justify-between"><span>Sanksi Denda Isya:</span><span>Rp${(db[n].sd||0).toLocaleString('id-ID')}</span></div>    
+                            <div class="flex justify-between border-t border-slate-800 pt-1 text-emerald-400"><span>Sudah Dibayar:</span><span>Rp${db[n].di.toLocaleString('id-ID')}</span></div>    
+                        </div>    
+                        <div class="flex gap-2">    
+                            <input type="number" id="pay_denda_${n}" class="w-full bg-slate-900 border border-emerald-950/50 rounded-xl px-2.5 py-1 text-xs text-slate-100 placeholder-slate-600 focus:outline-none" placeholder="Bayar Rp...">    
+                            <button onclick="bayarDendaAtasName('${n}', 'pay_denda_${n}')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1 rounded-xl text-xs shrink-0 cursor-pointer">Pelunasan</button>    
+                        </div>    
+                    </div>    
+                `;    
+            }    
+  
+            if (db[n].bt > 0) {    
+                jumlahSanksiBotakAktif += db[n].bt;    
+                panelDendaBotak.innerHTML += `    
+                    <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-amber-900/30 flex justify-between items-center">    
+                        <div>    
+                            <span class="font-bold text-slate-200 text-xs block">${n}</span>    
+                            <span class="text-[10px] text-amber-400 font-semibold">👩‍🦲 Sanksi Botak: ${db[n].bt} Kali</span>    
+                        </div>    
+                        <button onclick="koreksiParameter('${n}', 'bt', 1)" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-[10px] cursor-pointer">    
+                            Selesai Dibotak ✓    
+                        </button>    
+                    </div>    
+                `;    
+            }    
+        });    
+  
+        if (panelDendaUang.innerHTML === '') {    
+            panelDendaUang.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">🎉 Tidak ada denda uang yang berjalan.</div>`;    
+        }    
+        if (panelDendaBotak.innerHTML === '') {    
+            panelDendaBotak.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">✨ Tidak ada santri dengan sanksi botak aktif.</div>`;    
+        }    
+  
+        const badgeDenda = document.getElementById('badgeDendaAktif');    
+        const totalAktif = jumlahDendaUangAktif + jumlahSanksiBotakAktif;    
+        document.getElementById('totalDendaBerjalanBadge').innerText = `${totalAktif} Aktif`;    
+  
+        if (totalAktif > 0) {    
+            badgeDenda.classList.remove('hidden');    
+            badgeDenda.innerText = totalAktif;    
+        } else {    
+            badgeDenda.classList.add('hidden');    
+        }    
+  
+        // --- TAB 4: REKAP ---    
+        const summaryCont = document.getElementById('summaryContainer');    
+        summaryCont.innerHTML = '';    
+        let totalDendaPesantren = 0;    
+        let totalBayarPesantren = 0;    
+  
+        listSemua.forEach(n => {    
+            const sisa = hitungSisaDendaSantri(n);    
+            const totalDenda = hitungTotalDendaSantri(n);    
+            totalDendaPesantren += totalDenda;    
+            totalBayarPesantren += db[n].di;    
+            const isTambahan = santriTambahan.includes(n);    
+  
+            if (totalDenda > 0 || db[n].di > 0 || db[n].bt > 0) {    
+                summaryCont.innerHTML += `    
+                    <div class="bg-slate-950/70 p-3.5 rounded-2xl border border-emerald-950/40 text-xs">    
+                        <div class="flex justify-between items-start mb-2 font-bold">    
+                            <div>    
+                                <div class="flex items-center gap-1.5 flex-wrap">    
+                                    <span class="text-slate-200">${n}</span>    
+                                    ${isTambahan ? '<span class="text-[8px] bg-emerald-950 text-emerald-300 px-1 py-0.2 rounded font-normal">Non-piket</span>' : ''}    
+                                    ${db[n].bt > 0 ? `<span class="text-[8px] text-amber-400 font-extrabold">👩‍🦲 Botak ${db[n].bt}x</span>` : ''}    
+                                </div>    
+                                <span class="block text-[8px] text-slate-500 font-normal mt-0.5">Total Denda: Rp${totalDenda.toLocaleString('id-ID')}</span>    
+                            </div>    
+                            <span class="${sisa > 0 ? 'text-rose-400' : 'text-emerald-400'}">Sisa: Rp${sisa.toLocaleString('id-ID')}</span>    
+                        </div>    
+                        <button onclick="bagikanLaporan('${n}')" class="w-full bg-emerald-650 hover:bg-emerald-600 text-white text-[10px] font-bold py-1.5 px-3 rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer">    
+                            💬 Bagikan Laporan Ke Wali Santri    
+                        </button>    
+                    </div>    
+                `;    
+            }    
+        });    
+  
+        if (summaryCont.innerHTML === '') {    
+            summaryCont.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">🎉 Semua santri tertib, tidak ada denda aktif!</div>`;    
+        }    
+  
+        document.getElementById('statTotalDenda').innerText = `Rp${totalDendaPesantren.toLocaleString('id-ID')}`;    
+        document.getElementById('statTotalBayar').innerText = `Rp${totalBayarPesantren.toLocaleString('id-ID')}`;    
+    }    
+  
+    // Action Handlers    
+    function bayarDendaAtasName(n, inputId) {    
+        const input = document.getElementById(inputId);    
+        const val = parseInt(input.value);    
+        if (val && val > 0) {    
+            db[n].di += val;    
+            save();    
+            input.value = '';    
+            renderApp();    
+            showToast(`Pembayaran Rp${val.toLocaleString('id-ID')} disimpan!`, "💵");    
+        }    
+    }    
+  
+    function bayarDenda(n) { bayarDendaAtasName(n, 'pay_' + n); }    
+  
+    function updatePiket(n, parameter, nilai) {    
+        if (parameter === 'ja') db[n].ja = Math.max(0, db[n].ja + nilai);    
+        else db[n].so = Math.max(0, db[n].so + nilai);    
+        save(); renderApp(); showToast(`Data piket ${n} diperbarui!`, "💾");    
+    }    
+  
+    function updateIsya(n, parameter, nilai) {    
+        if (parameter === 'ap') db[n].ap = Math.max(0, db[n].ap + nilai);    
+        else if (parameter === 'tp') db[n].tp = Math.max(0, db[n].tp + nilai);    
+        save(); renderApp(); showToast(`Absensi Isya ${n} diperbarui!`, "📝");    
+    }    
+  
+    function eksekusiSanksi(n, tipe) {    
+        if (tipe === 'denda') {    
+            db[n].sd = (db[n].sd || 0) + TARIF.sanksiDenda;    
+            showToast(`Sanksi denda +Rp5.000 untuk ${n}!`, "💵");    
+        } else if (tipe === 'botak') {    
+            db[n].bt = (db[n].bt || 0) + 1;    
+            showToast(`${n} menjalani sanksi botak 👩‍🦲!`, "✂️");    
+        }    
+        save(); renderApp();    
+    }    
+  
+    function koreksiParameter(n, parameter, nilai) {    
+        if (db[n][parameter] !== undefined) {    
+            db[n][parameter] = Math.max(0, db[n][parameter] - nilai);    
+            save(); renderApp(); showToast(`Data ${n} diperbarui!`, "🔄");    
+        }    
+    }    
+  
+    // KELOLA SANTRI (TAMBAH / KELUAR)    
+    function openKelolaSantriModal() {    
+        renderKelolaSantriList();    
+        const modal = document.getElementById('kelolaSantriModal');    
+        modal.classList.remove('pointer-events-none', 'opacity-0');    
+        modal.querySelector('div').classList.remove('scale-95');    
+    }    
+  
+    function closeKelolaSantriModal() {    
+        const modal = document.getElementById('kelolaSantriModal');    
+        modal.classList.add('pointer-events-none', 'opacity-0');    
+        modal.querySelector('div').classList.add('scale-95');    
+    }    
+  
+    function renderKelolaSantriList() {    
+        const container = document.getElementById('listKelolaSantriContainer');    
+        container.innerHTML = '';    
+        const listSemua = dapatkanSemuaSantri();    
+  
+        listSemua.forEach(n => {    
+            let statusPiket = "Non-Piket";    
+            for (let h in jadwal) {    
+                if (jadwal[h].includes(n)) { statusPiket = `Piket ${h}`; break; }    
+            }    
+            container.innerHTML += `    
+                <div class="bg-slate-900 p-2.5 rounded-xl border border-emerald-950/30 flex justify-between items-center text-xs">    
+                    <div>    
+                        <span class="font-bold text-slate-200 block">${n}</span>    
+                        <span class="text-[9px] text-slate-400">${statusPiket}</span>    
+                    </div>    
+                    <button onclick="keluarkanSantri('${n}')" class="bg-rose-950/60 hover:bg-rose-900 border border-rose-900/50 text-rose-300 text-[10px] px-2.5 py-1 rounded-lg transition cursor-pointer">    
+                        Keluarkan ✖    
+                    </button>    
+                </div>    
+            `;    
+        });    
+    }    
+  
+    function tambahSantriBaru() {    
+        const nama = document.getElementById('namaSantriBaru').value.trim();    
+        const hari = document.getElementById('hariPiketSantriBaru').value;    
+  
+        if (!nama) { alert("Masukkan nama santri!"); return; }    
+        const listSemua = dapatkanSemuaSantri();    
+        if (listSemua.includes(nama)) { alert("Nama santri sudah ada!"); return; }    
+  
+        if (hari === "Non-Piket") {    
+            santriTambahan.push(nama);    
+        } else {    
+            if (!jadwal[hari]) jadwal[hari] = [];    
+            jadwal[hari].push(nama);    
+        }    
+  
+        db[nama] = { ja: 0, so: 0, di: 0, ap: 0, tp: 0, sd: 0, bt: 0 };    
+        save();    
+        document.getElementById('namaSantriBaru').value = '';    
+        renderKelolaSantriList();    
+        renderApp();    
+        showToast(`Santri baru ${nama} berhasil ditambahkan!`, "🎉");    
+    }    
+  
+    function keluarkanSantri(nama) {    
+        const sisa = hitungSisaDendaSantri(nama);    
+        if (sisa > 0) {    
+            if (!confirm(`Santri ${nama} masih memiliki tunggakan denda Rp${sisa.toLocaleString('id-ID')}. Yakin ingin mengeluarkan?`)) return;    
+        } else {    
+            if (!confirm(`Keluarkan ${nama} dari daftar santri?`)) return;    
+        }    
+  
+        for (let h in jadwal) {    
+            jadwal[h] = jadwal[h].filter(item => item !== nama);    
+        }    
+        santriTambahan = santriTambahan.filter(item => item !== nama);    
+        delete db[nama];    
+  
+        save();    
+        renderKelolaSantriList();    
+        renderApp();    
+        showToast(`Santri ${nama} telah dikeluarkan.`, "👋");    
+    }    
+  
+    function bagikanLaporan(n) {    
+        const totalDenda = hitungTotalDendaSantri(n);    
+        const sisa = hitungSisaDendaSantri(n);    
+        const bayar = db[n].di || 0;    
+            
+        const teksLaporan = `*LAPORAN KEDISIPLINAN SANTRI*\n*PONDOK PESANTREN AL-MU'AWANAH SUKAMANDI*\n\n_Assalamu'alaikum Wr. Wb._\nYth. Bapak/Ibu Wali Santri dari *${n}*,\n\nBerikut rincian laporan kedisiplinan ananda *${n}*:\n\n*1. Pelanggaran Piket Ashar:*\n- Tak Sholat: ${db[n].ja||0}x\n- Tak Sorogan: ${db[n].so||0}x\n\n*2. Pelanggaran Pengajian Isya':*\n- Alpa: ${db[n].ap||0}x | Terlambat: ${db[n].tp||0}x\n\n*3. Ringkasan Keuangan:*\n• Total Denda: *Rp${totalDenda.toLocaleString('id-ID')}*\n• Telah Dibayar: *Rp${bayar.toLocaleString('id-ID')}*\n• *Sisa Denda:* *Rp${sisa.toLocaleString('id-ID')}*\n\n_Wassalamu'alaikum Wr. Wb._`;    
+  
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(teksLaporan)}`, '_blank');    
+    }    
+  
+    function showToast(message, icon = "✨") {    
+        const toast = document.getElementById('toast');    
+        document.getElementById('toastIcon').innerText = icon;    
+        document.getElementById('toastMessage').innerText = message;    
+        toast.classList.remove('translate-y-20', 'opacity-0');    
+        toast.classList.add('translate-y-0', 'opacity-100');    
+        setTimeout(() => {    
+            toast.classList.remove('translate-y-0', 'opacity-100');    
+            toast.classList.add('translate-y-20', 'opacity-0');    
+        }, 2500);    
+    }    
+  
+    function showResetModal() {    
+        const modal = document.getElementById('confirmModal');    
+        modal.classList.remove('pointer-events-none', 'opacity-0');    
+        modal.querySelector('div').classList.remove('scale-95');    
+    }    
+  
+    function hideResetModal() {    
+        const modal = document.getElementById('confirmModal');    
+        modal.classList.add('pointer-events-none', 'opacity-0');    
+        modal.querySelector('div').classList.add('scale-95');    
+    }    
+  
+    function executeReset() {    
+        localStorage.clear();    
+        location.reload();    
+    }    
+  
+    renderApp();    
+</script>  </body>    
+   </html>
